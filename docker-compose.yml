@@ -1,0 +1,97 @@
+services:
+  # ============================================================================
+  # PostgreSQL 17 Persistent Database Service
+  # ============================================================================
+  postgres:
+    image: postgres:17-alpine
+    container_name: sentinelops-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-sentinel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sentinel_dev_secret_change_me}
+      POSTGRES_DB: ${POSTGRES_DB:-sentinelops_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - sentinelops_net
+    expose:
+      - "5432"
+    # Localhost-only binding (uncomment if host DB inspection is needed without public exposure)
+    # ports:
+    #   - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sentinel} -d ${POSTGRES_DB:-sentinelops_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ============================================================================
+  # SentinelOps FastAPI Core Backend Service
+  # ============================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sentinelops-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PROJECT_NAME: ${PROJECT_NAME:-SentinelOps}
+      TAGLINE: ${TAGLINE:-"Always watching. Always aware."}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEBUG: ${DEBUG:-false}
+      POSTGRES_SERVER: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER:-sentinel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sentinel_dev_secret_change_me}
+      POSTGRES_DB: ${POSTGRES_DB:-sentinelops_db}
+      BACKEND_CORS_ORIGINS: '["http://localhost:3000","http://localhost:5173","http://127.0.0.1:3000","http://127.0.0.1:5173"]'
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks:
+      - sentinelops_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health/live"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ============================================================================
+  # SentinelOps React Dashboard Frontend Service
+  # ============================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sentinelops-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:3000:80"
+    networks:
+      - sentinelops_net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+# ==============================================================================
+# Persistent Volumes and Isolated Internal Network
+# ==============================================================================
+volumes:
+  postgres_data:
+    name: sentinelops_postgres_data
+
+networks:
+  sentinelops_net:
+    name: sentinelops_internal_network
+    driver: bridge
+
