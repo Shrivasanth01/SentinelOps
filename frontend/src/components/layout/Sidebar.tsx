@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Activity,
   Server,
@@ -8,7 +8,8 @@ import {
   ShieldAlert,
   Sparkles,
   Settings,
-  Shield,
+  ChevronLeft,
+  ChevronRight,
   Layers,
 } from 'lucide-react';
 
@@ -33,18 +34,19 @@ interface NavItem {
   id: NavSection;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
-  phase?: string;
+  tag?: string;
+  badge?: string;
 }
 
 const navItems: NavItem[] = [
-  { id: 'overview', label: 'Overview', icon: Activity, phase: 'Active' },
-  { id: 'infrastructure', label: 'Infrastructure', icon: Server, phase: 'Live' },
-  { id: 'monitoring', label: 'Monitoring', icon: Cpu, phase: 'Live' },
-  { id: 'logs', label: 'Logs', icon: Terminal, phase: 'Live' },
-  { id: 'anomalies', label: 'Anomalies', icon: AlertTriangle, phase: 'Live' },
-  { id: 'incidents', label: 'Incidents', icon: ShieldAlert, phase: 'Phase 4' },
-  { id: 'ai-assistant', label: 'AI Assistant', icon: Sparkles, phase: 'Phase 4' },
-  { id: 'settings', label: 'Settings', icon: Settings },
+  { id: 'overview', label: 'Command Canvas', icon: Activity, tag: 'LIVE' },
+  { id: 'infrastructure', label: 'Topology Mesh', icon: Server, tag: 'MESH' },
+  { id: 'monitoring', label: 'Telemetry Stream', icon: Cpu, tag: 'STREAM' },
+  { id: 'logs', label: 'Log Terminal', icon: Terminal, tag: 'AUDIT' },
+  { id: 'anomalies', label: 'ML Anomaly Radar', icon: AlertTriangle, tag: 'RADAR' },
+  { id: 'incidents', label: 'Incident Workspace', icon: ShieldAlert, tag: 'TRIAGE' },
+  { id: 'ai-assistant', label: 'AIOps Investigator', icon: Sparkles, tag: 'AI' },
+  { id: 'settings', label: 'Gateway Settings', icon: Settings },
 ];
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -53,32 +55,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
   backendConnected,
   databaseConnected,
 }) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+
   return (
-    <aside className="w-64 flex-shrink-0 flex flex-col justify-between border-r border-navy-800 bg-navy-900/95 backdrop-blur-md min-h-screen">
-      {/* Top Branding Header */}
+    <aside
+      className={`flex-shrink-0 flex flex-col justify-between border-r border-obs-border bg-obs-bg-secondary/95 backdrop-blur-md transition-all duration-300 z-20 ${
+        isExpanded ? 'w-56' : 'w-16'
+      }`}
+    >
+      {/* Top Section */}
       <div>
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-navy-800">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/25">
-            <Shield className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold tracking-tight text-white text-lg">SentinelOps</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 font-semibold">
-                v0.1
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 font-mono tracking-tight">
-              Always watching. Always aware.
-            </p>
-          </div>
+        {/* Toggle Collapse Bar */}
+        <div className="h-10 flex items-center justify-between px-3 border-b border-obs-border/60 bg-obs-bg/60">
+          {isExpanded ? (
+            <span className="text-[10px] font-mono uppercase tracking-wider text-obs-text-muted">
+              Observatory Rail
+            </span>
+          ) : (
+            <span className="w-2 h-2 rounded-full bg-obs-accent mx-auto" />
+          )}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="p-1 rounded text-obs-text-muted hover:text-obs-text-primary hover:bg-obs-surface transition-colors"
+            title={isExpanded ? 'Collapse Rail' : 'Expand Rail'}
+          >
+            {isExpanded ? (
+              <ChevronLeft className="w-3.5 h-3.5" />
+            ) : (
+              <ChevronRight className="w-3.5 h-3.5" />
+            )}
+          </button>
         </div>
 
-        {/* Navigation Links */}
-        <nav className="p-3 space-y-1">
-          <div className="px-3 py-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
-            Platform Operations
-          </div>
+        {/* Navigation Rail Links */}
+        <nav className="p-2 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
@@ -86,30 +96,41 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => onSelectSection(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                title={!isExpanded ? item.label : undefined}
+                className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-md font-mono text-xs transition-all duration-150 relative group ${
                   isActive
-                    ? 'bg-blue-600/15 text-blue-400 border border-blue-500/30 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-navy-800/60 border border-transparent'
+                    ? 'bg-obs-accent/15 text-obs-accent border border-obs-accent/40 shadow-sm shadow-obs-accent/10 font-semibold'
+                    : 'text-obs-text-secondary hover:text-obs-text-primary hover:bg-obs-surface/60 border border-transparent'
                 }`}
               >
-                <div className="flex items-center gap-3">
+                {/* Active Indicator Bar on Left */}
+                {isActive && (
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 rounded-r bg-obs-accent" />
+                )}
+
+                <div className="shrink-0 flex items-center justify-center">
                   <Icon
-                    className={`h-4 w-4 ${
-                      isActive ? 'text-blue-400' : 'text-slate-400'
+                    className={`w-4 h-4 transition-colors ${
+                      isActive ? 'text-obs-accent' : 'text-obs-text-muted group-hover:text-obs-text-primary'
                     }`}
                   />
-                  <span>{item.label}</span>
                 </div>
-                {item.phase && (
-                  <span
-                    className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                      item.phase === 'Active' || item.phase === 'Live'
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                        : 'bg-navy-800 text-slate-400'
-                    }`}
-                  >
-                    {item.phase}
-                  </span>
+
+                {isExpanded && (
+                  <div className="flex-1 flex items-center justify-between overflow-hidden">
+                    <span className="truncate tracking-wide">{item.label}</span>
+                    {item.tag && (
+                      <span
+                        className={`text-[9px] px-1 py-0.2 rounded font-mono ${
+                          isActive
+                            ? 'bg-obs-accent/20 text-obs-accent'
+                            : 'bg-obs-surface text-obs-text-muted border border-obs-border/60'
+                        }`}
+                      >
+                        {item.tag}
+                      </span>
+                    )}
+                  </div>
                 )}
               </button>
             );
@@ -117,46 +138,63 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Bottom Node Diagnostics Summary */}
-      <div className="p-4 border-t border-navy-800 bg-navy-950/60 m-3 rounded-xl">
-        <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-2">
-          <span className="flex items-center gap-1.5">
-            <Layers className="h-3.5 w-3.5 text-blue-400" />
-            Core Cluster
-          </span>
-          <span className="text-[11px] text-slate-400">Phase 1</span>
-        </div>
+      {/* Bottom Compact Telemetry Status */}
+      <div className="p-2 border-t border-obs-border/70 bg-obs-bg/60">
+        {isExpanded ? (
+          <div className="p-2 rounded border border-obs-border/70 bg-obs-panel/60 font-mono text-[10px] space-y-1.5">
+            <div className="flex items-center justify-between text-obs-text-muted">
+              <span className="flex items-center gap-1">
+                <Layers className="w-3 h-3 text-obs-accent" />
+                <span>DAEMON</span>
+              </span>
+              <span className="text-obs-accent">v1.5</span>
+            </div>
 
-        <div className="space-y-1.5 text-xs font-mono">
-          <div className="flex items-center justify-between">
-            <span className="text-slate-400">FastAPI:</span>
-            <span className="flex items-center gap-1.5">
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  backendConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'
-                }`}
-              />
-              <span className={backendConnected ? 'text-emerald-400' : 'text-rose-400'}>
-                {backendConnected ? 'ALIVE' : 'OFFLINE'}
+            <div className="flex items-center justify-between">
+              <span className="text-obs-text-muted">API GATEWAY:</span>
+              <span className="flex items-center gap-1 font-semibold">
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    backendConnected ? 'bg-obs-healthy animate-pulse' : 'bg-obs-critical'
+                  }`}
+                />
+                <span className={backendConnected ? 'text-obs-healthy' : 'text-obs-critical'}>
+                  {backendConnected ? 'ONLINE' : 'DOWN'}
+                </span>
               </span>
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-slate-400">PostgreSQL:</span>
-            <span className="flex items-center gap-1.5">
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  databaseConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'
-                }`}
-              />
-              <span className={databaseConnected ? 'text-emerald-400' : 'text-rose-400'}>
-                {databaseConnected ? 'READY' : 'OFFLINE'}
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-obs-text-muted">PERSISTENCE:</span>
+              <span className="flex items-center gap-1 font-semibold">
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    databaseConnected ? 'bg-obs-healthy animate-pulse' : 'bg-obs-critical'
+                  }`}
+                />
+                <span className={databaseConnected ? 'text-obs-healthy' : 'text-obs-critical'}>
+                  {databaseConnected ? 'ONLINE' : 'DOWN'}
+                </span>
               </span>
-            </span>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2 py-1">
+            <div
+              title={`API Gateway: ${backendConnected ? 'ONLINE' : 'OFFLINE'}`}
+              className={`w-2 h-2 rounded-full ${
+                backendConnected ? 'bg-obs-healthy animate-pulse' : 'bg-obs-critical'
+              }`}
+            />
+            <div
+              title={`Database: ${databaseConnected ? 'ONLINE' : 'OFFLINE'}`}
+              className={`w-2 h-2 rounded-full ${
+                databaseConnected ? 'bg-obs-healthy animate-pulse' : 'bg-obs-critical'
+              }`}
+            />
+          </div>
+        )}
       </div>
     </aside>
   );
 };
-
