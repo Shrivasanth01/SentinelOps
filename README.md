@@ -57,8 +57,8 @@ SentinelOps/
 
 1. **Clone the repository and copy environment configuration:**
    ```bash
-   git clone https://github.com/Shrivasanth01/-SentinelOps.git
-   cd -SentinelOps
+   git clone https://github.com/Shrivasanth01/SentinelOps.git
+   cd SentinelOps
    cp .env.example .env
    ```
 

@@ -20,8 +20,8 @@ The simplest path to launch the full platform (PostgreSQL 17, FastAPI backend, R
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/Shrivasanth01/-SentinelOps.git
-cd -SentinelOps
+git clone https://github.com/Shrivasanth01/SentinelOps.git
+cd SentinelOps
 
 # 2. Initialize environment file
 cp .env.example .env
