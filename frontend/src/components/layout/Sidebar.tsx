@@ -37,9 +37,9 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { id: 'overview', label: 'Overview', icon: Activity, phase: 'Phase 1' },
-  { id: 'infrastructure', label: 'Infrastructure', icon: Server, phase: 'Phase 2' },
-  { id: 'monitoring', label: 'Monitoring', icon: Cpu, phase: 'Phase 2' },
+  { id: 'overview', label: 'Overview', icon: Activity, phase: 'Active' },
+  { id: 'infrastructure', label: 'Infrastructure', icon: Server, phase: 'Live' },
+  { id: 'monitoring', label: 'Monitoring', icon: Cpu, phase: 'Live' },
   { id: 'logs', label: 'Logs', icon: Terminal, phase: 'Phase 3' },
   { id: 'anomalies', label: 'Anomalies', icon: AlertTriangle, phase: 'Phase 3' },
   { id: 'incidents', label: 'Incidents', icon: ShieldAlert, phase: 'Phase 4' },
@@ -103,7 +103,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 {item.phase && (
                   <span
                     className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
-                      item.phase === 'Phase 1'
+                      item.phase === 'Active' || item.phase === 'Live'
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                         : 'bg-navy-800 text-slate-400'
                     }`}
