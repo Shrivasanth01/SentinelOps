@@ -130,3 +130,4 @@ Open `http://localhost:3000` in your browser. The Vite proxy forwards `/api/*` t
 
 ### Issue: Database Returns 503 on `/health/ready`
 **Explanation**: In Phase 1, if PostgreSQL is not running locally, `/health/ready` intentionally and cleanly returns HTTP 503 with status `unhealthy`. This confirms the readiness probe is accurately diagnosing connectivity instead of fabricating status.
+

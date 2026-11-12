@@ -119,3 +119,4 @@ Direct probe against running server:
 
 - **Metric Probes**: As planned for Phase 1, host hardware metrics (CPU percentage, memory RSS, disk I/O) are reserved for Phase 2 daemon collectors.
 - **ML & AI Modules**: The modular directories `backend/app/monitoring`, `backend/app/ml`, and `backend/app/ai` are scaffolded with clean module docstrings and ready for Phase 2/3/4 integrations without technical debt.
+

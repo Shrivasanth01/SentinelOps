@@ -161,3 +161,4 @@ SentinelOps/
 - **Internal Network**: PostgreSQL is attached exclusively to the internal bridge network `sentinelops_net`. No public `0.0.0.0` port bindings exist.
 - **Localhost Development Bindings**: Host port bindings in Docker Compose are strictly mapped to `127.0.0.1:8000` (backend) and `127.0.0.1:3000` (frontend).
 - **Secrets Management**: Credentials use environment variables with fallback defaults for local execution. Real production secrets are omitted from source control.
+
