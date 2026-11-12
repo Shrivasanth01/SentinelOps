@@ -1,7 +1,3 @@
-"""
-SentinelOps Machine Learning Module (Reserved for Future Phases).
+from app.ml.isolation_forest import anomaly_detector, AnomalyDetector, FEATURE_NAMES
 
-This module will contain unsupervised Isolation Forest anomaly detection models,
-feature extraction pipelines, baseline trend analysis, and scoring engines.
-"""
-
+__all__ = ["anomaly_detector", "AnomalyDetector", "FEATURE_NAMES"]

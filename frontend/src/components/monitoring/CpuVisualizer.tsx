@@ -95,3 +95,4 @@ export const CpuVisualizer: React.FC<CpuVisualizerProps> = ({ cpu }) => {
     </div>
   );
 };
+

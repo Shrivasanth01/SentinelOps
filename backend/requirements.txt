@@ -9,4 +9,7 @@ httpx>=0.28.0,<1.0.0
 python-dotenv>=1.0.1
 psutil>=6.0.0,<8.0.0
 prometheus-client>=0.20.0,<1.0.0
+scikit-learn>=1.4.0,<2.0.0
+numpy>=1.26.0,<3.0.0
+pandas>=2.2.0,<3.0.0
 

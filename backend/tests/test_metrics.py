@@ -124,3 +124,4 @@ async def test_metric_snapshot_record_persistence():
         assert record.process_count == 180
 
     await test_engine.dispose()
+

@@ -39,6 +39,11 @@ class MetricsService:
 
     async def persist_snapshot_to_db(self, snapshot: HostMetricsSnapshot) -> None:
         """Persists a snapshot record to PostgreSQL."""
+        from app.core.config import settings
+
+        if settings.ENVIRONMENT == "testing":
+            return
+
         try:
             async with AsyncSessionLocal() as session:
                 record = MetricSnapshotRecord(
@@ -107,3 +112,4 @@ class MetricsService:
 
 
 metrics_service = MetricsService()
+

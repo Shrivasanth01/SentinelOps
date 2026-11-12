@@ -17,6 +17,19 @@ from app.schemas.metrics import (
     MetricsHistoryResponse,
     MetricsSummaryResponse,
 )
+from app.schemas.logs import (
+    LogLevelEnum,
+    LogEntryCreate,
+    LogEntry,
+    LogsListResponse,
+)
+from app.schemas.anomalies import (
+    AnomalySeverityEnum,
+    AnomalyEvent,
+    AnomalyScoreResponse,
+    AnomalyHistoryResponse,
+    ModelTrainResponse,
+)
 
 __all__ = [
     "HealthStatusEnum",
@@ -36,4 +49,13 @@ __all__ = [
     "HostMetricsSnapshot",
     "MetricsHistoryResponse",
     "MetricsSummaryResponse",
+    "LogLevelEnum",
+    "LogEntryCreate",
+    "LogEntry",
+    "LogsListResponse",
+    "AnomalySeverityEnum",
+    "AnomalyEvent",
+    "AnomalyScoreResponse",
+    "AnomalyHistoryResponse",
+    "ModelTrainResponse",
 ]

@@ -34,3 +34,4 @@ class MetricSnapshotRecord(Base):
 
     def __repr__(self) -> str:
         return f"<MetricSnapshotRecord id={self.id} ts={self.timestamp} cpu={self.cpu_percent}% mem={self.memory_percent}%>"
+

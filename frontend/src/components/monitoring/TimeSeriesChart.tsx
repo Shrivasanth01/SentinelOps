@@ -154,3 +154,4 @@ export const TimeSeriesChart: React.FC<TimeSeriesChartProps> = ({
     </div>
   );
 };
+

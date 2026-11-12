@@ -93,3 +93,4 @@ export interface MetricsSummaryResponse {
   disk_percent_avg: number;
   time_window_seconds: number;
 }
+

@@ -85,3 +85,4 @@ export const NetworkThroughputWidget: React.FC<NetworkThroughputWidgetProps> = (
     </div>
   );
 };
+

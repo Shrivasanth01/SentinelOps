@@ -54,7 +54,8 @@ def create_application() -> FastAPI:
             f"{settings.TAGLINE}\n\n"
             "Production-grade Infrastructure Monitoring & AIOps Platform.\n"
             "- Phase 1: Architecture, Health Diagnostics, Containerization, and Persistent Storage.\n"
-            "- Phase 2: High-Resolution Host Telemetry, Background Sampling, and Prometheus Metrics."
+            "- Phase 2: High-Resolution Host Telemetry, Background Sampling, and Prometheus Metrics.\n"
+            "- Phase 3: Structured Log Streams Aggregation & Machine Learning Anomaly Detection (Isolation Forest)."
         ),
         version=settings.VERSION,
         openapi_url=f"{settings.API_V1_STR}/openapi.json",

@@ -94,3 +94,4 @@ dist/assets/index-BEdXtkc2.js   322.41 kB │ gzip: 89.34 kB
 
 - **Log Streams & Aggregation**: Syslog ingestion, structured log stream parsing, and live log tailing interface.
 - **Machine Learning Anomaly Detection**: Unsupervised Isolation Forest model (`backend/app/ml/`) training on historical metric snapshot tables to flag multidimensional infrastructure anomalies.
+

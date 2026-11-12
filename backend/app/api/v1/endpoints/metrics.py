@@ -52,3 +52,4 @@ async def get_metrics_summary(
 async def get_prometheus_metrics():
     content, content_type = get_prometheus_output()
     return Response(content=content, media_type=content_type)
+

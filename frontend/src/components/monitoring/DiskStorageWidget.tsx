@@ -74,3 +74,4 @@ export const DiskStorageWidget: React.FC<DiskStorageWidgetProps> = ({ disk }) =>
     </div>
   );
 };
+

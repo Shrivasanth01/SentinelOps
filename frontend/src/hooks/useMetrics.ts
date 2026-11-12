@@ -94,3 +94,4 @@ export function useMetrics(pollIntervalMs: number = 4000, enabled: boolean = tru
 
   return { ...state, refresh };
 }
+

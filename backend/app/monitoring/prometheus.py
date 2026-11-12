@@ -97,3 +97,4 @@ def update_prometheus_metrics(snapshot: HostMetricsSnapshot) -> None:
 def get_prometheus_output() -> tuple[bytes, str]:
     """Generates serialized Prometheus scrape content and content-type."""
     return generate_latest(sentinel_registry), CONTENT_TYPE_LATEST
+

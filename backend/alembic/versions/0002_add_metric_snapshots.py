@@ -43,3 +43,4 @@ def downgrade() -> None:
         table_name="metric_snapshot_records",
     )
     op.drop_table("metric_snapshot_records")
+

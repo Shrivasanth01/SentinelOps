@@ -18,3 +18,4 @@ export const metricsService = {
     return request<MetricsSummaryResponse>(`/metrics/summary?window_seconds=${windowSeconds}`);
   },
 };
+
