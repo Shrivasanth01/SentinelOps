@@ -67,3 +67,4 @@ async def simulate_anomaly(
     )
     anomaly_service._anomalies_buffer.appendleft(event)
     return event
+

@@ -91,3 +91,4 @@ async def test_system_log_record_persistence():
         assert "lost quorum" in record.message
 
     await test_engine.dispose()
+

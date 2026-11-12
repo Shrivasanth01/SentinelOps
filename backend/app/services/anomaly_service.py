@@ -89,3 +89,4 @@ class AnomalyService:
 
 
 anomaly_service = AnomalyService()
+

@@ -76,3 +76,4 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_system_log_records_level"), table_name="system_log_records")
     op.drop_index(op.f("ix_system_log_records_timestamp"), table_name="system_log_records")
     op.drop_table("system_log_records")
+

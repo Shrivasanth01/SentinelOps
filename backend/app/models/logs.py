@@ -32,3 +32,4 @@ class SystemLogRecord(Base):
 
     def __repr__(self) -> str:
         return f"<SystemLogRecord id={self.id} level={self.level} service={self.service}>"
+

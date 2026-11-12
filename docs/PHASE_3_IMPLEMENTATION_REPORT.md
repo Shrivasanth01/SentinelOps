@@ -103,3 +103,4 @@ dist/assets/index-CB_xBLTM.js   333.76 kB │ gzip: 92.11 kB
 
 - **Incident Management & Dispatch**: Automated incident escalation policies, severity triage (P1 - P4), and webhook integrations (Slack, PagerDuty).
 - **AI Assistant & LLM Root-Cause Analysis**: LLM integration (`backend/app/ai/`) synthesizing correlated logs and anomalies into human-readable root-cause summaries with executable remediation runbooks.
+

@@ -35,3 +35,4 @@ class LogsListResponse(BaseModel):
     total_count: int
     limit: int
     offset: int
+

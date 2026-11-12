@@ -76,3 +76,4 @@ export function useAnomalies(pollIntervalMs: number = 4000, enabled: boolean = t
     simulate,
   };
 }
+

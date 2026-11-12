@@ -33,3 +33,4 @@ class AnomalyEventRecord(Base):
 
     def __repr__(self) -> str:
         return f"<AnomalyEventRecord id={self.id} score={self.score} severity={self.severity}>"
+

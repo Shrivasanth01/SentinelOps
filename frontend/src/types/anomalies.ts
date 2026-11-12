@@ -33,3 +33,4 @@ export interface ModelTrainResponse {
   contamination: number;
   message: string;
 }
+

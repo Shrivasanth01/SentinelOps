@@ -65,3 +65,4 @@ async def simulate_event(
         metadata={"simulated": True},
     )
     return log_service.ingest_log(entry)
+

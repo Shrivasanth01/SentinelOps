@@ -72,3 +72,4 @@ export function useLogs(pollIntervalMs: number = 3000, enabled: boolean = true) 
     emitSimulatedLog,
   };
 }
+

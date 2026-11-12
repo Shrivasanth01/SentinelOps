@@ -94,3 +94,4 @@ async def test_anomaly_event_record_persistence():
         assert record.resolved is False
 
     await test_engine.dispose()
+

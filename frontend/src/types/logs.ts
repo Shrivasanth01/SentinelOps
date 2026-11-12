@@ -16,3 +16,4 @@ export interface LogsListResponse {
   limit: number;
   offset: number;
 }
+

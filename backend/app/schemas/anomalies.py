@@ -43,3 +43,4 @@ class ModelTrainResponse(BaseModel):
     sample_count: int
     contamination: float
     message: str
+
