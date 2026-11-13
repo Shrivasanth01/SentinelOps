@@ -48,13 +48,22 @@ export const ServiceStatus: React.FC<ServiceStatusProps> = ({
       icon: Brain,
     },
     {
-      name: 'Prometheus Exporter Target',
-      category: 'Observability Scraper',
-      protocol: 'Prometheus Text',
-      port: 8000,
-      status: backendConnected ? 'READY' : 'OFFLINE',
+      name: 'Prometheus Telemetry Server',
+      category: 'Time-Series Engine',
+      protocol: 'Prometheus HTTP v1',
+      port: 9090,
+      status: backendConnected ? 'ONLINE' : 'STANDBY',
       healthy: backendConnected,
       icon: Layers,
+    },
+    {
+      name: 'Windows Exporter Host Daemon',
+      category: 'Host Telemetry',
+      protocol: 'TCP /metrics',
+      port: 9182,
+      status: backendConnected ? 'SCRAPING' : 'OFFLINE',
+      healthy: backendConnected,
+      icon: Radio,
     },
   ];
 

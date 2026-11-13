@@ -58,6 +58,18 @@ class Settings(BaseSettings):
     # Health & Diagnostics
     HEALTH_TIMEOUT_SECONDS: float = 3.0
 
+    # Prometheus Telemetry Integration (Phase 2)
+    PROMETHEUS_URL: str = "http://127.0.0.1:9090"
+    PROMETHEUS_TIMEOUT_SECONDS: float = 5.0
+
+    # Infrastructure Metric Alerting & Status Thresholds
+    CPU_WARNING_THRESHOLD: float = 75.0
+    CPU_CRITICAL_THRESHOLD: float = 90.0
+    MEMORY_WARNING_THRESHOLD: float = 80.0
+    MEMORY_CRITICAL_THRESHOLD: float = 92.0
+    DISK_WARNING_THRESHOLD: float = 85.0
+    DISK_CRITICAL_THRESHOLD: float = 95.0
+
     @computed_field  # type: ignore[prop-decorator]
     @property
     def ASYNC_DATABASE_URL(self) -> str:

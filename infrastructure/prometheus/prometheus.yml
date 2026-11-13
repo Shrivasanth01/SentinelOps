@@ -1,0 +1,37 @@
+# ==============================================================================
+# SentinelOps Prometheus Configuration — Phase 2 Real-Time Monitoring
+# ==============================================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+# Alertmanager configuration (reserved for future alerting phase)
+alerting:
+  alertmanagers: []
+
+# Scrape configurations
+scrape_configs:
+  # Self-monitoring of Prometheus server
+  - job_name: "prometheus"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["localhost:9090"]
+        labels:
+          instance: "sentinelops-prometheus"
+          service: "prometheus-server"
+
+  # Host Windows Exporter Telemetry
+  # In Docker, 'host.docker.internal:9182' routes to the Windows host exporter.
+  # If running Prometheus natively on the host, '127.0.0.1:9182' can be used.
+  - job_name: "windows_exporter"
+    scrape_interval: 10s
+    scrape_timeout: 8s
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["host.docker.internal:9182"]
+        labels:
+          instance: "windows-host"
+          environment: "local-host"
+          collector: "windows_exporter"

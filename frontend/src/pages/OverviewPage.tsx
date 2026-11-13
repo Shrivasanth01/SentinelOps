@@ -116,12 +116,12 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
         {/* Global Action Links */}
         <div className="flex items-center gap-2 text-xs">
           <a
-            href="http://127.0.0.1:8000/metrics"
+            href="http://127.0.0.1:9090"
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-1.5 px-2.5 py-1 rounded border border-obs-border bg-obs-bg-secondary hover:bg-obs-surface text-obs-text-secondary hover:text-obs-text-primary transition-colors text-[11px]"
           >
-            <span>Prometheus</span>
+            <span>Prometheus UI</span>
             <ExternalLink className="w-3 h-3 text-obs-accent" />
           </a>
 

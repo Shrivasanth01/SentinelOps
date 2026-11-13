@@ -27,6 +27,35 @@ services:
       start_period: 10s
 
   # ============================================================================
+  # Prometheus Time-Series Telemetry Engine
+  # ============================================================================
+  prometheus:
+    image: prom/prometheus:v2.53.3
+    container_name: sentinelops-prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - ./infrastructure/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - sentinelops_net
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ============================================================================
   # SentinelOps FastAPI Core Backend Service
   # ============================================================================
   backend:
@@ -38,6 +67,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      prometheus:
+        condition: service_healthy
     environment:
       PROJECT_NAME: ${PROJECT_NAME:-SentinelOps}
       TAGLINE: ${TAGLINE:-"Observe. Detect. Investigate. Resolve."}
@@ -48,6 +79,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-sentinel}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sentinel_dev_secret_change_me}
       POSTGRES_DB: ${POSTGRES_DB:-sentinelops_db}
+      PROMETHEUS_URL: ${PROMETHEUS_URL:-http://prometheus:9090}
       BACKEND_CORS_ORIGINS: '["http://localhost:3000","http://localhost:5173","http://127.0.0.1:3000","http://127.0.0.1:5173"]'
     ports:
       - "127.0.0.1:8000:8000"
@@ -89,6 +121,8 @@ services:
 volumes:
   postgres_data:
     name: sentinelops_postgres_data
+  prometheus_data:
+    name: sentinelops_prometheus_data
 
 networks:
   sentinelops_net:
