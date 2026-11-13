@@ -65,26 +65,34 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 async def check_database_connectivity(timeout: float = 3.0) -> Tuple[bool, float, Dict[str, Any]]:
     """
-    Pings the database using a simple SELECT 1 query and returns:
-    (is_healthy, latency_ms, metadata)
+    Pings the database using a simple SELECT 1 query with strict timeout enforcement.
+    Returns: (is_healthy, latency_ms, metadata)
     """
     start_time = time.perf_counter()
-    try:
+
+    async def _probe() -> Any:
         async with async_engine.connect() as connection:
             result = await connection.execute(text("SELECT 1"))
-            val = result.scalar()
-            latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
-            
-            # Pool information if available
-            pool = async_engine.pool
-            pool_info = {
-                "pool_size": pool.size() if hasattr(pool, "size") else 0,
-                "checked_in": pool.checkedin() if hasattr(pool, "checkedin") else 0,
-                "checked_out": pool.checkedout() if hasattr(pool, "checkedout") else 0,
-                "overflow": pool.overflow() if hasattr(pool, "overflow") else 0,
-            }
+            return result.scalar()
 
-            return val == 1, latency_ms, pool_info
+    try:
+        val = await asyncio.wait_for(_probe(), timeout=timeout)
+        latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
+
+        # Pool information if available
+        pool = async_engine.pool
+        pool_info = {
+            "pool_size": pool.size() if hasattr(pool, "size") else 0,
+            "checked_in": pool.checkedin() if hasattr(pool, "checkedin") else 0,
+            "checked_out": pool.checkedout() if hasattr(pool, "checkedout") else 0,
+            "overflow": pool.overflow() if hasattr(pool, "overflow") else 0,
+        }
+
+        return val == 1, latency_ms, pool_info
+    except asyncio.TimeoutError:
+        latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
+        logger.warning(f"Database health check timed out after {timeout}s ({latency_ms}ms)")
+        return False, latency_ms, {"error": f"Database health probe timed out after {timeout}s"}
     except Exception as exc:
         latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
         logger.warning(f"Database health check failed ({latency_ms}ms): {exc}")

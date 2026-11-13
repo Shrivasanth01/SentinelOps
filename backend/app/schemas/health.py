@@ -36,3 +36,17 @@ class SystemInfoResponse(BaseModel):
     os_platform: str
     timestamp: datetime
 
+
+class ConfigSummaryResponse(BaseModel):
+    project_name: str
+    tagline: str
+    version: str
+    environment: str
+    api_v1_prefix: str
+    cors_origins: list[str]
+    postgres_host: str
+    postgres_port: int
+    postgres_db: str
+    db_pool_size: int
+    db_max_overflow: int
+

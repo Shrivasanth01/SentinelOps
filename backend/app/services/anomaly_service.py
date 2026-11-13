@@ -1,9 +1,7 @@
 import collections
 import logging
-import json
 import uuid
 from datetime import datetime, timezone
-from typing import List, Optional
 
 from app.schemas.anomalies import (
     AnomalyEvent,
@@ -75,6 +73,30 @@ class AnomalyService:
         """Returns recent detected anomaly events."""
         items = list(self._anomalies_buffer)[:limit]
         return AnomalyHistoryResponse(anomalies=items, total_count=len(self._anomalies_buffer))
+
+    async def persist_anomaly_to_db(self, event: AnomalyEvent) -> None:
+        """Persists flagged anomaly event to PostgreSQL."""
+        from app.core.config import settings
+
+        if settings.ENVIRONMENT == "testing":
+            return
+
+        try:
+            async with AsyncSessionLocal() as session:
+                record = AnomalyEventRecord(
+                    id=event.id,
+                    timestamp=event.timestamp,
+                    score=event.score,
+                    is_anomaly=event.is_anomaly,
+                    severity=event.severity.value,
+                    contributing_metrics=",".join(event.contributing_metrics),
+                    description=event.description,
+                    resolved=event.resolved,
+                )
+                session.add(record)
+                await session.commit()
+        except Exception as exc:
+            logger.warning(f"Failed to persist anomaly event to database: {exc}")
 
     def retrain_model(self) -> ModelTrainResponse:
         """Retrains the Isolation Forest model using all available snapshots in the ring buffer."""

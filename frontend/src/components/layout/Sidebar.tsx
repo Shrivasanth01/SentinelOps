@@ -59,6 +59,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <aside
+      aria-label="Observatory Navigation Rail"
       className={`flex-shrink-0 flex flex-col justify-between border-r border-obs-border bg-obs-bg-secondary/95 backdrop-blur-md transition-all duration-300 z-20 ${
         isExpanded ? 'w-56' : 'w-16'
       }`}
@@ -76,6 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
+            aria-label={isExpanded ? 'Collapse Navigation Rail' : 'Expand Navigation Rail'}
             className="p-1 rounded text-obs-text-muted hover:text-obs-text-primary hover:bg-obs-surface transition-colors"
             title={isExpanded ? 'Collapse Rail' : 'Expand Rail'}
           >

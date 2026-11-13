@@ -128,6 +128,7 @@ export const Topbar: React.FC<TopbarProps> = ({
         {/* Mobile Search Button */}
         <button
           onClick={onOpenCommandPalette}
+          aria-label="Open Command Launcher"
           className="md:hidden p-1.5 rounded border border-obs-border bg-obs-panel text-obs-text-secondary hover:text-obs-text-primary"
           title="Open Command Launcher"
         >
@@ -146,6 +147,7 @@ export const Topbar: React.FC<TopbarProps> = ({
         {telemetry.correlationId && (
           <button
             onClick={onOpenDiagnostics}
+            aria-label="Inspect Correlation ID Diagnostics"
             title="Correlation ID Diagnostics"
             className="hidden lg:flex items-center gap-1 px-2 py-1 rounded bg-obs-panel border border-obs-border hover:border-obs-accent/40 text-[11px] text-obs-text-muted hover:text-obs-text-primary transition-colors"
           >
@@ -165,6 +167,7 @@ export const Topbar: React.FC<TopbarProps> = ({
         <button
           onClick={onRefresh}
           disabled={isRefreshing}
+          aria-label="Trigger Synchronous Connectivity Probe"
           title="Trigger Synchronous Connectivity Probe"
           className="p-1.5 rounded border border-obs-border bg-obs-panel hover:bg-obs-surface text-obs-text-secondary hover:text-obs-text-primary transition-colors disabled:opacity-50"
         >
@@ -175,6 +178,7 @@ export const Topbar: React.FC<TopbarProps> = ({
         <div className="relative">
           <button
             onClick={() => setNotificationsOpen(!notificationsOpen)}
+            aria-label="System Signal Notifications"
             className="p-1.5 rounded border border-obs-border bg-obs-panel hover:bg-obs-surface text-obs-text-secondary hover:text-obs-text-primary relative transition-colors"
             title="System Signal Notifications"
           >

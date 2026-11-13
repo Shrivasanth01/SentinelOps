@@ -12,9 +12,15 @@ import {
 import { useMetrics } from '../hooks/useMetrics';
 import { MetricVisualization, MetricSeries } from '../components/observatory/MetricVisualization';
 
-export const MonitoringPage: React.FC = () => {
+interface MonitoringPageProps {
+  backendConnected?: boolean;
+}
+
+export const MonitoringPage: React.FC<MonitoringPageProps> = ({
+  backendConnected = true,
+}) => {
   const { current, history, summary, isRefreshing, lastUpdated, refresh, error } =
-    useMetrics(3000, true);
+    useMetrics(3000, backendConnected);
   const [timeRange, setTimeRange] = useState<'1m' | '5m' | '15m' | '1h'>('15m');
 
   const primaryDisk = current?.disk.partitions?.[0];
@@ -109,7 +115,22 @@ export const MonitoringPage: React.FC = () => {
         </div>
       </div>
 
-      {error && (
+      {!backendConnected && (
+        <div className="p-3 rounded border border-obs-critical/40 bg-obs-critical/10 text-xs text-obs-critical flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4" />
+            <span>FastAPI Gateway Offline &mdash; Telemetry collection paused. Ensure backend is running at http://127.0.0.1:8000.</span>
+          </div>
+          <button
+            onClick={refresh}
+            className="px-2 py-1 rounded border border-obs-critical/50 hover:bg-obs-critical/20 font-semibold transition-colors"
+          >
+            Retry Connection
+          </button>
+        </div>
+      )}
+
+      {backendConnected && error && (
         <div className="p-3 rounded border border-obs-critical/40 bg-obs-critical/10 text-xs text-obs-critical flex items-center gap-2">
           <AlertCircle className="w-4 h-4" />
           <span>Telemetry Stream Disrupted: {error}</span>

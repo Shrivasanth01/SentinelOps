@@ -40,7 +40,7 @@ services:
         condition: service_healthy
     environment:
       PROJECT_NAME: ${PROJECT_NAME:-SentinelOps}
-      TAGLINE: ${TAGLINE:-"Always watching. Always aware."}
+      TAGLINE: ${TAGLINE:-"Observe. Detect. Investigate. Resolve."}
       ENVIRONMENT: ${ENVIRONMENT:-development}
       DEBUG: ${DEBUG:-false}
       POSTGRES_SERVER: postgres

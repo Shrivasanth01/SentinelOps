@@ -141,14 +141,24 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       title: 'Open Prometheus Metrics Scrape Target (/metrics)',
       category: 'Observability',
       icon: ExternalLink,
-      action: () => window.open('http://127.0.0.1:8000/metrics', '_blank'),
+      action: () => {
+        const url = window.location.port === '3000' || window.location.port === '5173'
+          ? 'http://127.0.0.1:8000/metrics'
+          : '/metrics';
+        window.open(url, '_blank');
+      },
     },
     {
       id: 'link-docs',
       title: 'Open FastAPI Interactive OpenAPI Docs (/api/v1/docs)',
       category: 'Observability',
       icon: ExternalLink,
-      action: () => window.open('http://127.0.0.1:8000/api/v1/docs', '_blank'),
+      action: () => {
+        const url = window.location.port === '3000' || window.location.port === '5173'
+          ? 'http://127.0.0.1:8000/api/v1/docs'
+          : '/api/v1/docs';
+        window.open(url, '_blank');
+      },
     },
   ];
 
@@ -197,7 +207,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/80 backdrop-blur-sm animate-fade-in font-mono text-xs">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command Observatory Launcher"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4 bg-black/80 backdrop-blur-sm animate-fade-in font-mono text-xs"
+    >
       <div className="relative w-full max-w-2xl rounded-2xl border border-obs-border bg-obs-panel shadow-2xl overflow-hidden flex flex-col max-h-[75vh]">
         {/* Search Input Bar */}
         <div className="flex items-center gap-3 px-4 py-3.5 border-b border-obs-border bg-obs-bg-secondary">
@@ -205,6 +220,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           <input
             ref={inputRef}
             type="text"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="command-palette-results"
+            aria-label="Search commands"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -219,7 +238,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         </div>
 
         {/* Command Items List */}
-        <div className="p-2 overflow-y-auto flex-1 space-y-1">
+        <div id="command-palette-results" role="listbox" className="p-2 overflow-y-auto flex-1 space-y-1">
           {filtered.length === 0 ? (
             <div className="p-8 text-center text-obs-text-muted">
               No matching commands found.
@@ -232,6 +251,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               return (
                 <div
                   key={item.id}
+                  role="option"
+                  aria-selected={isSelected}
                   onClick={() => {
                     item.action();
                     onClose();
@@ -281,3 +302,4 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     </div>
   );
 };
+

@@ -9,8 +9,14 @@ import {
 import { useMetrics } from '../hooks/useMetrics';
 import { InfrastructureTopology } from '../components/observatory/InfrastructureTopology';
 
-export const InfrastructurePage: React.FC = () => {
-  const { current } = useMetrics(4000, true);
+interface InfrastructurePageProps {
+  backendConnected?: boolean;
+}
+
+export const InfrastructurePage: React.FC<InfrastructurePageProps> = ({
+  backendConnected = true,
+}) => {
+  const { current } = useMetrics(4000, backendConnected);
 
   const formatBytes = (bytes?: number) => {
     if (!bytes) return '0 B';
@@ -52,8 +58,14 @@ export const InfrastructurePage: React.FC = () => {
               <h1 className="text-sm font-semibold tracking-wider uppercase text-obs-text-primary">
                 Infrastructure Topology Workspace
               </h1>
-              <span className="px-1.5 py-0.2 text-[9px] rounded bg-obs-healthy/15 border border-obs-healthy/30 text-obs-healthy">
-                FLEET ONLINE
+              <span
+                className={`px-1.5 py-0.2 text-[9px] rounded border ${
+                  backendConnected
+                    ? 'bg-obs-healthy/15 border-obs-healthy/30 text-obs-healthy'
+                    : 'bg-obs-critical/15 border-obs-critical/30 text-obs-critical'
+                }`}
+              >
+                {backendConnected ? 'FLEET ONLINE' : 'GATEWAY OFFLINE'}
               </span>
             </div>
             <p className="text-[11px] text-obs-text-muted">

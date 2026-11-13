@@ -3,7 +3,7 @@ import logging
 import json
 import uuid
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import Optional
 
 from app.schemas.logs import LogEntry, LogEntryCreate, LogLevelEnum, LogsListResponse
 from app.models.logs import SystemLogRecord

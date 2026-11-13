@@ -1,8 +1,7 @@
 import collections
 import logging
-import json
 from datetime import datetime, timezone, timedelta
-from typing import List, Optional
+from typing import Optional
 
 from app.monitoring.collector import metrics_collector
 from app.monitoring.prometheus import update_prometheus_metrics

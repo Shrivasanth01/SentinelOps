@@ -27,13 +27,13 @@ export const App: React.FC = () => {
           />
         );
       case 'infrastructure':
-        return <InfrastructurePage />;
+        return <InfrastructurePage backendConnected={healthState.backendConnected} />;
       case 'monitoring':
-        return <MonitoringPage />;
+        return <MonitoringPage backendConnected={healthState.backendConnected} />;
       case 'logs':
-        return <LogsPage />;
+        return <LogsPage backendConnected={healthState.backendConnected} />;
       case 'anomalies':
-        return <AnomaliesPage />;
+        return <AnomaliesPage backendConnected={healthState.backendConnected} />;
       case 'incidents':
         return <IncidentsPage />;
       case 'ai-assistant':

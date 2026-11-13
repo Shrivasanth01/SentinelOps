@@ -49,3 +49,30 @@ async def test_custom_exception_response(client: AsyncClient):
     assert "Simulated connection timeout" in data["error"]["message"]
     assert data["error"]["details"]["host"] == "postgres-cluster"
 
+
+@pytest.mark.asyncio
+async def test_config_summary_endpoint(client: AsyncClient):
+    response = await client.get("/api/v1/system/config-summary")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["project_name"] == "SentinelOps"
+    assert data["tagline"] == "Observe. Detect. Investigate. Resolve."
+    assert data["api_v1_prefix"] == "/api/v1"
+    assert isinstance(data["cors_origins"], list)
+
+
+@pytest.mark.asyncio
+async def test_database_connectivity_timeout_probe():
+    from unittest.mock import patch
+    import asyncio
+    from app.db.session import check_database_connectivity
+
+    async def mock_timeout(coro, timeout):
+        coro.close()
+        raise asyncio.TimeoutError()
+
+    with patch("asyncio.wait_for", side_effect=mock_timeout):
+        is_healthy, latency, meta = await check_database_connectivity(timeout=0.01)
+        assert is_healthy is False
+        assert "timed out" in meta["error"]
+

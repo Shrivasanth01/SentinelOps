@@ -127,3 +127,4 @@ export const TelemetryPanel: React.FC<TelemetryPanelProps> = ({
     </div>
   );
 };
+

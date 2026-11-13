@@ -95,3 +95,4 @@ Phase 1.5 transforms **SentinelOps** (*AI-Powered Infrastructure Monitoring & AI
   python -m pytest -c backend/pytest.ini -v
   # Output: 27 passed in 7.41s (100% pass rate).
   ```
+

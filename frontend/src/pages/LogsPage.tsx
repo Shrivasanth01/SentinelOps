@@ -13,7 +13,13 @@ import {
 import { useLogs } from '../hooks/useLogs';
 import { LogLevel } from '../types/logs';
 
-export const LogsPage: React.FC = () => {
+interface LogsPageProps {
+  backendConnected?: boolean;
+}
+
+export const LogsPage: React.FC<LogsPageProps> = ({
+  backendConnected = true,
+}) => {
   const {
     logs,
     totalCount,
@@ -27,7 +33,7 @@ export const LogsPage: React.FC = () => {
     setIsAutoScroll,
     refresh,
     emitSimulatedLog,
-  } = useLogs(3000, true);
+  } = useLogs(3000, backendConnected);
 
   const [copiedId, setCopiedId] = useState<string | null>(null);
 

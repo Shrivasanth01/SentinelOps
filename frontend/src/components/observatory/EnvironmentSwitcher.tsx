@@ -50,6 +50,9 @@ export const EnvironmentSwitcher: React.FC<EnvironmentSwitcherProps> = ({
     <div className="relative font-mono text-xs">
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-label="Select command environment"
         className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-obs-border bg-obs-panel hover:border-obs-accent/40 text-obs-text-primary transition-all shadow-sm"
       >
         <span className={`h-2 w-2 rounded-full ${currentObj.color.split(' ')[0]}`} />

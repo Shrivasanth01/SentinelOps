@@ -10,8 +10,14 @@ import {
 import { useAnomalies } from '../hooks/useAnomalies';
 import { AnomalySeverity } from '../types/anomalies';
 
-export const AnomaliesPage: React.FC = () => {
-  const { score, anomalies, isRetraining, refresh, retrain, simulate } = useAnomalies(4000, true);
+interface AnomaliesPageProps {
+  backendConnected?: boolean;
+}
+
+export const AnomaliesPage: React.FC<AnomaliesPageProps> = ({
+  backendConnected = true,
+}) => {
+  const { score, anomalies, isRetraining, refresh, retrain, simulate } = useAnomalies(4000, backendConnected);
 
   const getSeverityBadge = (severity: AnomalySeverity) => {
     switch (severity) {

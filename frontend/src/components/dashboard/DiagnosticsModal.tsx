@@ -49,7 +49,12 @@ export const DiagnosticsModal: React.FC<DiagnosticsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-obs-bg/80 backdrop-blur-sm font-mono">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Telemetry Diagnostics Explorer"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-obs-bg/80 backdrop-blur-sm font-mono"
+    >
       <div className="relative w-full max-w-3xl rounded-lg border border-obs-border bg-obs-panel shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-obs-border bg-obs-bg-secondary/90">
