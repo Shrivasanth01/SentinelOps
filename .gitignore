@@ -68,3 +68,6 @@ infrastructure/windows_exporter/*.exe
 infrastructure/prometheus/bin/
 infrastructure/prometheus/data/
 
+# Blackbox Exporter Binaries
+infrastructure/blackbox_exporter/bin/
+

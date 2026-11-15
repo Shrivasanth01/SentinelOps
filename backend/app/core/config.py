@@ -58,9 +58,18 @@ class Settings(BaseSettings):
     # Health & Diagnostics
     HEALTH_TIMEOUT_SECONDS: float = 3.0
 
-    # Prometheus Telemetry Integration (Phase 2)
+    # Prometheus Telemetry Integration (Phase 2 & 3)
     PROMETHEUS_URL: str = "http://127.0.0.1:9090"
     PROMETHEUS_TIMEOUT_SECONDS: float = 5.0
+
+    # Blackbox Exporter Integration (Phase 3 Service Prober)
+    BLACKBOX_EXPORTER_URL: str = "http://127.0.0.1:9115"
+    BLACKBOX_TIMEOUT_SECONDS: float = 5.0
+
+    # Performance Baseline Engine (Phase 3 Statistical Baseline)
+    BASELINE_MIN_DATA_POINTS: int = 10
+    BASELINE_Z_SCORE_WARNING: float = 2.0
+    BASELINE_Z_SCORE_CRITICAL: float = 3.0
 
     # Infrastructure Metric Alerting & Status Thresholds
     CPU_WARNING_THRESHOLD: float = 75.0

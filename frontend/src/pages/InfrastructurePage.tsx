@@ -7,7 +7,7 @@ import {
   Layers,
 } from 'lucide-react';
 import { useMetrics } from '../hooks/useMetrics';
-import { InfrastructureTopology } from '../components/observatory/InfrastructureTopology';
+import { InfrastructureMap } from '../components/observatory/InfrastructureMap';
 
 interface InfrastructurePageProps {
   backendConnected?: boolean;
@@ -95,7 +95,7 @@ export const InfrastructurePage: React.FC<InfrastructurePageProps> = ({
             Drag to pan &bull; Scroll to zoom &bull; Click node to inspect details
           </span>
         </div>
-        <InfrastructureTopology />
+        <InfrastructureMap />
       </div>
 
       {/* Hardware Subsystem Telemetry Matrix */}

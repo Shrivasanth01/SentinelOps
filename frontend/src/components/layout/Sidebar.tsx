@@ -11,10 +11,16 @@ import {
   ChevronLeft,
   ChevronRight,
   Layers,
+  Globe,
+  BarChart3,
+  LineChart,
 } from 'lucide-react';
 
 export type NavSection =
   | 'overview'
+  | 'telemetry-explorer'
+  | 'services'
+  | 'baselines'
   | 'infrastructure'
   | 'monitoring'
   | 'logs'
@@ -40,6 +46,9 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: 'overview', label: 'Command Canvas', icon: Activity, tag: 'LIVE' },
+  { id: 'telemetry-explorer', label: 'Telemetry Waveforms', icon: LineChart, tag: 'WAVE' },
+  { id: 'services', label: 'Service Intelligence', icon: Globe, tag: 'PROBE' },
+  { id: 'baselines', label: 'Performance Baselines', icon: BarChart3, tag: 'Z-SCORE' },
   { id: 'infrastructure', label: 'Topology Mesh', icon: Server, tag: 'MESH' },
   { id: 'monitoring', label: 'Telemetry Stream', icon: Cpu, tag: 'STREAM' },
   { id: 'logs', label: 'Log Terminal', icon: Terminal, tag: 'AUDIT' },

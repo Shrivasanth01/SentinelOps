@@ -10,6 +10,9 @@ import { AnomaliesPage } from './pages/AnomaliesPage';
 import { IncidentsPage } from './pages/IncidentsPage';
 import { AIAssistantPage } from './pages/AIAssistantPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { TelemetryExplorer } from './components/observatory/TelemetryExplorer';
+import { ServiceIntelligence } from './components/observatory/ServiceIntelligence';
+import { PerformanceBaselines } from './components/observatory/PerformanceBaselines';
 
 export const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<NavSection>('overview');
@@ -24,8 +27,15 @@ export const App: React.FC = () => {
           <OverviewPage
             healthState={healthState}
             onRefresh={healthState.refresh}
+            onNavigate={setActiveSection}
           />
         );
+      case 'telemetry-explorer':
+        return <TelemetryExplorer />;
+      case 'services':
+        return <ServiceIntelligence />;
+      case 'baselines':
+        return <PerformanceBaselines />;
       case 'infrastructure':
         return <InfrastructurePage backendConnected={healthState.backendConnected} />;
       case 'monitoring':
@@ -51,6 +61,7 @@ export const App: React.FC = () => {
           <OverviewPage
             healthState={healthState}
             onRefresh={healthState.refresh}
+            onNavigate={setActiveSection}
           />
         );
     }

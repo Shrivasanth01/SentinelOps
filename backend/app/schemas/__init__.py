@@ -49,6 +49,34 @@ from app.schemas.monitoring import (
     HistoryMetricsResponse,
 )
 
+from app.schemas.services import (
+    ProtocolType,
+    ProbeModuleType,
+    ServiceAvailabilityStatus,
+    MonitoredServiceCreate,
+    MonitoredServiceUpdate,
+    MonitoredServiceResponse,
+    ServicesListResponse,
+    WindowsServiceInfo,
+    WindowsServicesResponse,
+)
+from app.schemas.analytics import (
+    TimeRangeEnum,
+    TrendDirectionEnum,
+    DeviationStatusEnum,
+    SubsystemStats,
+    HistoricalMetricPoint,
+    HistoricalMetricResponse,
+    StatisticalBaseline,
+    BaselinesResponse,
+    AnalyticsSummaryResponse,
+)
+from app.schemas.topology import (
+    TopologyNode,
+    TopologyEdge,
+    TopologyResponse,
+)
+
 __all__ = [
     "HealthStatusEnum",
     "BaseResponse",
@@ -92,4 +120,25 @@ __all__ = [
     "HistoryPoint",
     "HistorySeries",
     "HistoryMetricsResponse",
+    "ProtocolType",
+    "ProbeModuleType",
+    "ServiceAvailabilityStatus",
+    "MonitoredServiceCreate",
+    "MonitoredServiceUpdate",
+    "MonitoredServiceResponse",
+    "ServicesListResponse",
+    "WindowsServiceInfo",
+    "WindowsServicesResponse",
+    "TimeRangeEnum",
+    "TrendDirectionEnum",
+    "DeviationStatusEnum",
+    "SubsystemStats",
+    "HistoricalMetricPoint",
+    "HistoricalMetricResponse",
+    "StatisticalBaseline",
+    "BaselinesResponse",
+    "AnalyticsSummaryResponse",
+    "TopologyNode",
+    "TopologyEdge",
+    "TopologyResponse",
 ]

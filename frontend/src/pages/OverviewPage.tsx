@@ -12,14 +12,19 @@ import { ServiceStatus } from '../components/observatory/ServiceStatus';
 import { IncidentTimeline, IncidentItem } from '../components/observatory/IncidentTimeline';
 import { ActivityStream, ActivityEvent } from '../components/observatory/ActivityStream';
 
+import { ExecutiveSummaryBanner } from '../components/observatory/ExecutiveSummaryBanner';
+import { NavSection } from '../components/layout/Sidebar';
+
 interface OverviewPageProps {
   healthState: HealthState;
   onRefresh: () => void;
+  onNavigate?: (section: NavSection) => void;
 }
 
 export const OverviewPage: React.FC<OverviewPageProps> = ({
   healthState,
   onRefresh,
+  onNavigate = () => {},
 }) => {
   const { backendConnected, databaseConnected, readiness } = healthState;
   const { current: telemetry } = useMetrics(4000, backendConnected);
@@ -144,6 +149,9 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Phase 3 Executive Observability Scorecard */}
+      <ExecutiveSummaryBanner onNavigate={onNavigate} />
 
       {/* Main Observatory Canvas: Asymmetric Composition */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">

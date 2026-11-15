@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+from fastapi.encoders import jsonable_encoder
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 logger = logging.getLogger("sentinelops.exceptions")
@@ -131,12 +132,14 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         f"Validation error on {request.method} {request.url.path} (Correlation: {correlation_id})",
         extra={"correlation_id": correlation_id, "path": request.url.path, "method": request.method},
     )
+    # Ensure all items in exc.errors() (e.g. ValueError in ctx) are JSON-serializable
+    sanitized_errors = jsonable_encoder(exc.errors())
     return _build_error_response(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         error_code="VALIDATION_ERROR",
         message="Request payload validation failed",
         correlation_id=correlation_id,
-        details=exc.errors(),
+        details=sanitized_errors,
     )
 
 

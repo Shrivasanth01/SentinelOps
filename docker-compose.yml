@@ -56,6 +56,28 @@ services:
       start_period: 10s
 
   # ============================================================================
+  # Prometheus Blackbox Exporter Service (Phase 3 Service Prober)
+  # ============================================================================
+  blackbox_exporter:
+    image: prom/blackbox-exporter:v0.25.0
+    container_name: sentinelops-blackbox-exporter
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/blackbox_exporter/blackbox.yml"
+    ports:
+      - "127.0.0.1:9115:9115"
+    volumes:
+      - ./infrastructure/blackbox_exporter/blackbox.yml:/etc/blackbox_exporter/blackbox.yml:ro
+    networks:
+      - sentinelops_net
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--tries=1", "--spider", "http://localhost:9115/-/healthy"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # ============================================================================
   # SentinelOps FastAPI Core Backend Service
   # ============================================================================
   backend:
@@ -80,6 +102,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sentinel_dev_secret_change_me}
       POSTGRES_DB: ${POSTGRES_DB:-sentinelops_db}
       PROMETHEUS_URL: ${PROMETHEUS_URL:-http://prometheus:9090}
+      BLACKBOX_EXPORTER_URL: ${BLACKBOX_EXPORTER_URL:-http://blackbox_exporter:9115}
       BACKEND_CORS_ORIGINS: '["http://localhost:3000","http://localhost:5173","http://127.0.0.1:3000","http://127.0.0.1:5173"]'
     ports:
       - "127.0.0.1:8000:8000"

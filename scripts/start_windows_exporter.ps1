@@ -11,7 +11,7 @@ param(
     [string]$TargetDir = "",
     [int]$Port = 9182,
     [string]$ListenAddress = "0.0.0.0",
-    [string]$Collectors = "cpu,memory,logical_disk,net,os,system",
+    [string]$Collectors = "cpu,memory,logical_disk,net,os,system,service",
     [switch]$Foreground
 )
 
