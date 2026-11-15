@@ -97,3 +97,4 @@ class AnalyticsSummaryResponse(BaseModel):
     critical_trends: list[str] = Field(default_factory=list, description="List of notable growth or surge trends")
     service_availability_percent: float = Field(default=100.0, ge=0.0, le=100.0)
     monitored_nodes_count: int = 0
+

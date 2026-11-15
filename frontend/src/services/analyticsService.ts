@@ -35,3 +35,4 @@ export const analyticsService = {
     return request<AnalyticsSummaryResponse>('/analytics/summary', { method: 'GET' }, 6000);
   },
 };
+

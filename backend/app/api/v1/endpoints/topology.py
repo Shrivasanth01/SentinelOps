@@ -22,3 +22,4 @@ async def get_infrastructure_topology(
     session: Annotated[AsyncSession, Depends(get_db)],
 ) -> TopologyResponse:
     return await topology_service.get_topology(session=session)
+

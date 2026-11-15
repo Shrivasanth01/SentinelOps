@@ -313,3 +313,4 @@ class HistoricalAnalyticsService:
 
 
 historical_analytics_service = HistoricalAnalyticsService()
+

@@ -71,6 +71,14 @@ class Settings(BaseSettings):
     BASELINE_Z_SCORE_WARNING: float = 2.0
     BASELINE_Z_SCORE_CRITICAL: float = 3.0
 
+    # Grafana Loki & Alloy Log Engine (Phase 4)
+    LOKI_URL: str = "http://127.0.0.1:3100"
+    LOKI_TIMEOUT_SECONDS: float = 6.0
+    ALLOY_URL: str = "http://127.0.0.1:12345"
+    LOG_REDACTION_ENABLED: bool = True
+    SECURITY_EVENTS_AUTHORIZED: bool = False
+    LOG_BUFFER_MAX_SIZE: int = 2000
+
     # Infrastructure Metric Alerting & Status Thresholds
     CPU_WARNING_THRESHOLD: float = 75.0
     CPU_CRITICAL_THRESHOLD: float = 90.0

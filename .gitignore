@@ -71,3 +71,9 @@ infrastructure/prometheus/data/
 # Blackbox Exporter Binaries
 infrastructure/blackbox_exporter/bin/
 
+# Grafana Loki & Alloy Binaries & Data
+infrastructure/loki/bin/
+infrastructure/loki/data/
+infrastructure/alloy/bin/
+infrastructure/alloy/data/
+

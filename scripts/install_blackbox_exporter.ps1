@@ -57,3 +57,4 @@ Remove-Item -Path $ExtractTemp -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path $TarPath -Force -ErrorAction SilentlyContinue
 
 Write-Host "[OK] Blackbox Exporter ready at: $ExePath" -ForegroundColor Green
+

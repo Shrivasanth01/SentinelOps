@@ -78,3 +78,4 @@ export interface WindowsServicesResponse {
   running_count: number;
   stopped_count: number;
 }
+

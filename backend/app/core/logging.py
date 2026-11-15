@@ -90,6 +90,15 @@ def setup_logging(environment: str = "development", debug: bool = False) -> None
 
     root_logger.addHandler(handler)
 
+    # Attach Phase 4 Loki & In-Memory Forwarding Handler
+    try:
+        from app.logging_engine.collectors.fastapi_logger import LokiForwardingHandler
+        loki_handler = LokiForwardingHandler()
+        loki_handler.setLevel(log_level)
+        root_logger.addHandler(loki_handler)
+    except Exception as exc:
+        pass
+
     # Quiet overly verbose third-party loggers
     logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
     logging.getLogger("uvicorn.error").setLevel(logging.INFO)

@@ -40,3 +40,4 @@ modules:
       tls_config:
         insecure_skip_verify: true
       preferred_ip_protocol: "ip4"
+

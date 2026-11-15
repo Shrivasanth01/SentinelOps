@@ -58,6 +58,25 @@ class LogService:
             metadata=entry.metadata,
         )
         self._buffer.append(log_obj)
+
+        # Forward to Phase 4 FastAPILogBuffer for unified query & streaming
+        try:
+            from app.logging_engine.collectors.fastapi_logger import fastapi_log_buffer
+            from app.logging_engine.schemas.logs import LogEntry as P4LogEntry, LogLevelEnum as P4LogLevel
+            fastapi_log_buffer.append(
+                P4LogEntry(
+                    id=log_obj.id,
+                    timestamp=log_obj.timestamp,
+                    level=P4LogLevel(entry.level.value),
+                    service=entry.service,
+                    message=entry.message,
+                    source="APPLICATION_LOG",
+                    metadata=entry.metadata or {},
+                )
+            )
+        except Exception:
+            pass
+
         return log_obj
 
     async def persist_log_to_db(self, entry: LogEntry) -> None:

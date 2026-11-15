@@ -43,3 +43,4 @@ class MonitoredServiceRecord(Base):
 
     def __repr__(self) -> str:
         return f"<MonitoredServiceRecord id={self.id} name='{self.name}' target='{self.target_url}' enabled={self.enabled}>"
+

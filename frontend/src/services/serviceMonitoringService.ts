@@ -56,3 +56,4 @@ export const serviceMonitoringService = {
     return request<WindowsServicesResponse>(`/services/windows/overview${query}`, { method: 'GET' }, 6000);
   },
 };
+

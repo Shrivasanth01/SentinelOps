@@ -114,3 +114,4 @@ async def delete_service(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Monitored service target '{service_id}' not found",
         )
+

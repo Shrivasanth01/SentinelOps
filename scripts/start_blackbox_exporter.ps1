@@ -67,3 +67,4 @@ if ($Foreground) {
         Write-Host "     Probe endpoint: http://localhost:$Port/probe" -ForegroundColor Cyan
     }
 }
+

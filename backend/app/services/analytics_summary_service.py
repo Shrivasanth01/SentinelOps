@@ -111,3 +111,4 @@ class AnalyticsSummaryService:
 
 
 analytics_summary_service = AnalyticsSummaryService()
+

@@ -1,274 +1,282 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Terminal,
+  Activity,
   Search,
-  Play,
-  Pause,
-  PlusCircle,
+  AlertOctagon,
+  GitCompare,
+  Server,
   RefreshCw,
-  Copy,
-  Check,
-  Filter,
+  Database,
 } from 'lucide-react';
-import { useLogs } from '../hooks/useLogs';
-import { LogLevel } from '../types/logs';
+import { useLogIntelligence } from '../hooks/useLogIntelligence';
+import { LogStream } from '../components/observatory/LogStream';
+import { LogExplorer } from '../components/observatory/LogExplorer';
+import { LogDetailsDrawer } from '../components/observatory/LogDetailsDrawer';
+import { ErrorIntelligence } from '../components/observatory/ErrorIntelligence';
+import { LogTimelineChart } from '../components/observatory/LogTimelineChart';
+import { LogSourceManager } from '../components/observatory/LogSourceManager';
+import { MetricLogCorrelator } from '../components/observatory/MetricLogCorrelator';
 
 interface LogsPageProps {
   backendConnected?: boolean;
 }
 
-export const LogsPage: React.FC<LogsPageProps> = ({
-  backendConnected = true,
-}) => {
+export const LogsPage: React.FC<LogsPageProps> = () => {
   const {
+    activeTab,
+    setActiveTab,
     logs,
     totalCount,
+    isLoading,
+    isStreaming,
+    setIsStreaming,
+    lokiConnected,
+    executionTimeMs,
+    timeRange,
+    setTimeRange,
     levelFilter,
     setLevelFilter,
     serviceFilter,
     setServiceFilter,
+    sourceFilter,
+    setSourceFilter,
     searchQuery,
     setSearchQuery,
-    isAutoScroll,
-    setIsAutoScroll,
+    selectedLog,
+    setSelectedLog,
+    summary,
+    errorIntelligence,
+    timeline,
+    correlation,
+    correlateLoading,
+    runCorrelation,
+    sources,
+    sourcesLoading,
+    refreshSources,
+    createSource,
+    deleteSource,
     refresh,
-    emitSimulatedLog,
-  } = useLogs(3000, backendConnected);
+  } = useLogIntelligence();
 
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-
-  const handleCopy = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 1500);
-  };
-
-  const getLevelBadge = (level: LogLevel) => {
-    switch (level) {
-      case 'CRITICAL':
-        return 'bg-obs-critical/20 text-obs-critical border-obs-critical/40';
-      case 'ERROR':
-        return 'bg-obs-critical/10 text-obs-critical border-obs-critical/30';
-      case 'WARNING':
-        return 'bg-obs-warning/10 text-obs-warning border-obs-warning/30';
-      case 'INFO':
-        return 'bg-obs-accent/10 text-obs-accent border-obs-accent/30';
-      case 'DEBUG':
-      default:
-        return 'bg-obs-surface text-obs-text-muted border-obs-border';
-    }
+  const handleFilterPattern = (pattern: string) => {
+    // Extract significant keyword from error sample to search
+    const cleanTerm = pattern.split(' ')[0] || pattern;
+    setSearchQuery(cleanTerm);
+    setActiveTab('explorer');
   };
 
   return (
-    <div className="space-y-4 font-mono">
-      {/* Top Scope Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-3.5 rounded-lg border border-obs-border bg-obs-panel/80 backdrop-blur-sm">
+    <div className="space-y-4 font-mono text-xs">
+      {/* Command Observatory Header Banner */}
+      <div className="p-4 bg-[#0D1420] border border-[#243247] rounded-lg flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded border border-obs-accent/30 bg-obs-accent/10 flex items-center justify-center text-obs-accent shrink-0">
-            <Terminal className="w-4 h-4" />
+          <div className="p-2.5 bg-[#162235] border border-[#2B3E5C] rounded-md text-[#58A6FF] shrink-0">
+            <Terminal className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-sm font-semibold tracking-wider uppercase text-obs-text-primary">
-                Technical Log Exploration Terminal
+              <h1 className="text-sm font-bold text-[#E6EDF3] tracking-wider uppercase">
+                CENTRALIZED LOG INTELLIGENCE & TELEMETRY OBSERVATORY
               </h1>
-              <span className="px-1.5 py-0.2 text-[9px] rounded bg-obs-healthy/15 border border-obs-healthy/30 text-obs-healthy">
-                LIVE INGESTION ACTIVE
+              <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-[#36D399]/15 border border-[#36D399]/30 text-[#36D399]">
+                PHASE 4 ACTIVE
               </span>
             </div>
-            <p className="text-[11px] text-obs-text-muted">
-              Structured event pipeline, real-time query engine, and auto-tailing console
+            <p className="text-[11px] text-[#8B949E] mt-0.5">
+              Observe. Detect. Investigate. Resolve. | Unified Grafana Loki, Windows Event Channels & Host Telemetry
             </p>
           </div>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center gap-2 text-xs">
-          <button
-            onClick={() =>
-              emitSimulatedLog(
-                'WARNING',
-                'gateway-proxy',
-                'Transient downstream latency spike (+420ms) detected on /api/v1/telemetry'
-              )
-            }
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded border border-obs-border bg-obs-bg-secondary hover:bg-obs-surface text-obs-text-secondary hover:text-obs-text-primary transition-colors text-[11px]"
-            title="Dispatch simulated diagnostic warning"
-          >
-            <PlusCircle className="w-3.5 h-3.5 text-obs-accent" />
-            <span>Emit Test Probe</span>
-          </button>
+        {/* Status Indicators Pill Group */}
+        <div className="flex flex-wrap items-center gap-2 text-[11px]">
+          {/* Loki Connectivity Status */}
+          <div className="px-3 py-1 bg-[#101928] border border-[#212E42] rounded flex items-center gap-2">
+            <Database className="w-3.5 h-3.5 text-[#58A6FF]" />
+            <span className="text-[#8B949E]">Storage:</span>
+            <span className={`font-semibold ${lokiConnected ? 'text-[#36D399]' : 'text-amber-400'}`}>
+              {lokiConnected ? 'Loki TSDB' : 'Fallback Buffer'}
+            </span>
+          </div>
 
+          {/* Active Sources */}
+          <div className="px-3 py-1 bg-[#101928] border border-[#212E42] rounded flex items-center gap-2">
+            <Server className="w-3.5 h-3.5 text-[#36D399]" />
+            <span className="text-[#8B949E]">Sources:</span>
+            <span className="font-semibold text-[#E6EDF3]">{sources.length} Configured</span>
+          </div>
+
+          {/* Error Rate */}
+          <div className="px-3 py-1 bg-[#101928] border border-[#212E42] rounded flex items-center gap-2">
+            <AlertOctagon className="w-3.5 h-3.5 text-[#FF5555]" />
+            <span className="text-[#8B949E]">Error Rate:</span>
+            <span className="font-semibold text-[#FF5555]">
+              {summary?.recent_error_rate ? `${summary.recent_error_rate}%` : '0.0%'}
+            </span>
+          </div>
+
+          {/* Global Refresh */}
           <button
             onClick={refresh}
-            className="p-1.5 rounded border border-obs-border bg-obs-panel hover:bg-obs-surface text-obs-text-secondary hover:text-obs-text-primary transition-colors"
-            title="Refresh stream"
+            className="p-1.5 bg-[#162235] hover:bg-[#1E2E47] border border-[#26374E] rounded text-[#C9D1D9] transition-colors"
+            title="Refresh All Telemetry"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
           </button>
         </div>
       </div>
 
-      {/* Control Strip: Filtering, Search & Auto-tail */}
-      <div className="p-3 rounded-lg border border-obs-border bg-obs-panel/80 space-y-3">
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 text-xs">
-          {/* Search Message Box */}
-          <div className="flex items-center gap-2 flex-1">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2 w-3.5 h-3.5 text-obs-text-muted" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Query logs (regex, keyword, correlation ID)..."
-                className="w-full rounded border border-obs-border bg-obs-bg pl-8 pr-3 py-1.5 text-obs-text-primary placeholder-obs-text-muted focus:outline-none focus:border-obs-accent text-xs font-mono"
-              />
-            </div>
+      {/* Navigation Sub-Tabs Bar */}
+      <div className="flex items-center gap-1 border-b border-[#243247] pb-2 text-xs">
+        <button
+          onClick={() => setActiveTab('explorer')}
+          className={`px-3.5 py-1.5 rounded font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === 'explorer'
+              ? 'bg-[#162235] text-[#58A6FF] border border-[#2B3F5D]'
+              : 'text-[#8B949E] hover:text-[#C9D1D9]'
+          }`}
+        >
+          <Search className="w-3.5 h-3.5" />
+          <span>LOG EXPLORER</span>
+        </button>
 
-            {/* Service Filter */}
-            <input
-              type="text"
-              value={serviceFilter}
-              onChange={(e) => setServiceFilter(e.target.value)}
-              placeholder="Filter by service..."
-              className="w-40 rounded border border-obs-border bg-obs-bg px-2.5 py-1.5 text-obs-text-primary placeholder-obs-text-muted focus:outline-none focus:border-obs-accent text-xs font-mono"
-            />
-          </div>
-
-          {/* Auto-tail Button & Count */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsAutoScroll(!isAutoScroll)}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded border text-xs font-mono transition-colors ${
-                isAutoScroll
-                  ? 'border-obs-accent/40 bg-obs-accent/15 text-obs-accent'
-                  : 'border-obs-border bg-obs-bg text-obs-text-muted hover:text-obs-text-primary'
-              }`}
-            >
-              {isAutoScroll ? (
-                <>
-                  <Pause className="w-3.5 h-3.5" />
-                  <span>Auto-Tail ON</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-3.5 h-3.5" />
-                  <span>Auto-Tail OFF</span>
-                </>
-              )}
-            </button>
-
-            <span className="text-xs text-obs-text-muted">
-              INGESTED: <span className="text-obs-text-primary font-bold">{totalCount}</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Severity Filter Pills */}
-        <div className="flex items-center gap-1.5 pt-1 border-t border-obs-border/50 text-[11px] overflow-x-auto">
-          <span className="text-obs-text-muted mr-1 flex items-center gap-1">
-            <Filter className="w-3 h-3" />
-            SEVERITY:
-          </span>
-          {(['ALL', 'CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'] as const).map((level) => {
-            const isSelected = (level === 'ALL' && !levelFilter) || levelFilter === level;
-            return (
-              <button
-                key={level}
-                onClick={() => setLevelFilter(level === 'ALL' ? undefined : (level as LogLevel))}
-                className={`px-2 py-0.5 rounded border text-[10px] font-mono uppercase transition-colors ${
-                  isSelected
-                    ? 'border-obs-accent/50 bg-obs-accent/20 text-obs-accent font-bold'
-                    : 'border-obs-border/70 bg-obs-bg text-obs-text-muted hover:text-obs-text-primary'
-                }`}
-              >
-                {level}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Terminal Viewport */}
-      <div className="rounded-lg border border-obs-border bg-obs-bg font-mono text-xs overflow-hidden shadow-2xl">
-        {/* Terminal Title Bar */}
-        <div className="flex items-center justify-between px-3 py-2 border-b border-obs-border/70 bg-obs-bg-secondary/70">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-obs-critical/80 inline-block" />
-            <span className="w-2.5 h-2.5 rounded-full bg-obs-warning/80 inline-block" />
-            <span className="w-2.5 h-2.5 rounded-full bg-obs-healthy/80 inline-block" />
-            <span className="text-[11px] text-obs-text-muted ml-2">
-              sentinelops@observatory:/var/log/pipeline (stdout/stderr)
-            </span>
-          </div>
-          <span className="text-[10px] text-obs-text-muted">
-            Buffer: {logs.length} lines shown
-          </span>
-        </div>
-
-        {/* Terminal Rows */}
-        <div className="divide-y divide-obs-border/40 max-h-[580px] overflow-y-auto p-1 bg-obs-bg/95">
-          {logs.length === 0 ? (
-            <div className="py-12 text-center text-obs-text-muted space-y-1">
-              <Terminal className="w-8 h-8 mx-auto text-obs-text-muted/40" />
-              <p className="text-xs">No log frames matched the active query filter.</p>
-              <p className="text-[11px]">Emit a test probe or adjust search parameters.</p>
-            </div>
-          ) : (
-            logs.map((log) => {
-              const dateStr = new Date(log.timestamp).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-              });
-
-              return (
-                <div
-                  key={log.id}
-                  className="px-2.5 py-1.5 flex items-start gap-2.5 hover:bg-obs-surface/40 group transition-colors text-[11px]"
-                >
-                  {/* Timestamp */}
-                  <span className="text-obs-text-muted shrink-0 text-[10px] pt-0.5">
-                    {dateStr}
-                  </span>
-
-                  {/* Level Pill */}
-                  <span
-                    className={`px-1.5 py-0.2 rounded border text-[9px] uppercase font-bold shrink-0 ${getLevelBadge(
-                      log.level
-                    )}`}
-                  >
-                    {log.level}
-                  </span>
-
-                  {/* Service */}
-                  <span className="text-obs-accent shrink-0 font-semibold text-[10px]">
-                    [{log.service}]
-                  </span>
-
-                  {/* Log Message */}
-                  <span className="text-obs-text-primary flex-1 break-all font-mono leading-relaxed">
-                    {log.message}
-                  </span>
-
-                  {/* Copy Action */}
-                  <button
-                    onClick={() => handleCopy(log.id, `${log.timestamp} [${log.level}] [${log.service}] ${log.message}`)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-obs-text-muted hover:text-obs-text-primary transition-opacity shrink-0"
-                    title="Copy log entry"
-                  >
-                    {copiedId === log.id ? (
-                      <Check className="w-3 h-3 text-obs-healthy" />
-                    ) : (
-                      <Copy className="w-3 h-3" />
-                    )}
-                  </button>
-                </div>
-              );
-            })
+        <button
+          onClick={() => setActiveTab('stream')}
+          className={`px-3.5 py-1.5 rounded font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === 'stream'
+              ? 'bg-[#162235] text-[#58A6FF] border border-[#2B3F5D]'
+              : 'text-[#8B949E] hover:text-[#C9D1D9]'
+          }`}
+        >
+          <Activity className="w-3.5 h-3.5" />
+          <span>LIVE STREAM</span>
+          {isStreaming && (
+            <span className="w-2 h-2 rounded-full bg-[#36D399] animate-pulse" />
           )}
-        </div>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('errors')}
+          className={`px-3.5 py-1.5 rounded font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === 'errors'
+              ? 'bg-[#162235] text-[#58A6FF] border border-[#2B3F5D]'
+              : 'text-[#8B949E] hover:text-[#C9D1D9]'
+          }`}
+        >
+          <AlertOctagon className="w-3.5 h-3.5" />
+          <span>ERROR INTELLIGENCE</span>
+          {errorIntelligence && errorIntelligence.total_errors > 0 && (
+            <span className="px-1.5 py-0.2 text-[9px] bg-red-500/20 text-[#FF5555] rounded font-bold">
+              {errorIntelligence.total_errors}
+            </span>
+          )}
+        </button>
+
+        <button
+          onClick={() => setActiveTab('correlator')}
+          className={`px-3.5 py-1.5 rounded font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === 'correlator'
+              ? 'bg-[#162235] text-[#58A6FF] border border-[#2B3F5D]'
+              : 'text-[#8B949E] hover:text-[#C9D1D9]'
+          }`}
+        >
+          <GitCompare className="w-3.5 h-3.5" />
+          <span>METRIC CORRELATION</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('sources')}
+          className={`px-3.5 py-1.5 rounded font-semibold transition-colors flex items-center gap-2 ${
+            activeTab === 'sources'
+              ? 'bg-[#162235] text-[#58A6FF] border border-[#2B3F5D]'
+              : 'text-[#8B949E] hover:text-[#C9D1D9]'
+          }`}
+        >
+          <Server className="w-3.5 h-3.5" />
+          <span>SOURCE MANAGER</span>
+        </button>
       </div>
+
+      {/* Timeline Histogram (Rendered on Explorer & Stream tabs) */}
+      {(activeTab === 'explorer' || activeTab === 'stream') && timeline && (
+        <LogTimelineChart
+          buckets={timeline.buckets}
+          totalEvents={timeline.total_events}
+          timeRange={timeRange}
+        />
+      )}
+
+      {/* Main Tab Workspace Render */}
+      {activeTab === 'explorer' && (
+        <LogExplorer
+          logs={logs}
+          totalCount={totalCount}
+          isLoading={isLoading}
+          lokiConnected={lokiConnected}
+          executionTimeMs={executionTimeMs}
+          timeRange={timeRange}
+          setTimeRange={setTimeRange}
+          levelFilter={levelFilter}
+          setLevelFilter={setLevelFilter}
+          serviceFilter={serviceFilter}
+          setServiceFilter={setServiceFilter}
+          sourceFilter={sourceFilter}
+          setSourceFilter={setSourceFilter}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onSelectLog={setSelectedLog}
+          onRefresh={refresh}
+        />
+      )}
+
+      {activeTab === 'stream' && (
+        <LogStream
+          logs={logs}
+          isStreaming={isStreaming}
+          onToggleStreaming={() => setIsStreaming(!isStreaming)}
+          onSelectLog={setSelectedLog}
+        />
+      )}
+
+      {activeTab === 'errors' && (
+        <ErrorIntelligence
+          data={errorIntelligence}
+          isLoading={isLoading}
+          onFilterPattern={handleFilterPattern}
+        />
+      )}
+
+      {activeTab === 'correlator' && (
+        <MetricLogCorrelator
+          correlation={correlation}
+          isLoading={correlateLoading}
+          onRunCorrelation={runCorrelation}
+          onSelectLog={setSelectedLog}
+        />
+      )}
+
+      {activeTab === 'sources' && (
+        <LogSourceManager
+          sources={sources}
+          isLoading={sourcesLoading}
+          onCreateSource={async (src) => {
+            const res = await createSource(src);
+            return { ok: res.ok, error: res.error };
+          }}
+          onDeleteSource={async (id) => {
+            const res = await deleteSource(id);
+            return { ok: res.ok };
+          }}
+          onRefresh={refreshSources}
+        />
+      )}
+
+      {/* Deep Inspection Flyout Drawer */}
+      <LogDetailsDrawer
+        log={selectedLog}
+        onClose={() => setSelectedLog(null)}
+      />
     </div>
   );
 };

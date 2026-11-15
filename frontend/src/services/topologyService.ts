@@ -6,3 +6,4 @@ export const topologyService = {
     return request<TopologyResponse>('/topology', { method: 'GET' }, 8000);
   },
 };
+

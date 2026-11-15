@@ -39,3 +39,4 @@ export interface TopologyResponse {
   total_edges: number;
   health_summary: Record<string, number>;
 }
+

@@ -81,3 +81,4 @@ export interface AnalyticsSummaryResponse {
   service_availability_percent: number;
   monitored_nodes_count: number;
 }
+

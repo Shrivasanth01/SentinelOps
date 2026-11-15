@@ -3,6 +3,7 @@ from app.models.metric_snapshot import MetricSnapshotRecord
 from app.models.logs import SystemLogRecord
 from app.models.anomalies import AnomalyEventRecord
 from app.models.services import MonitoredServiceRecord
+from app.models.log_sources import LogSourceRecord
 
 __all__ = [
     "HealthCheckAuditLog",
@@ -10,4 +11,5 @@ __all__ = [
     "SystemLogRecord",
     "AnomalyEventRecord",
     "MonitoredServiceRecord",
+    "LogSourceRecord",
 ]

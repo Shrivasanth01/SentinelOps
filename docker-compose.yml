@@ -78,6 +78,29 @@ services:
       start_period: 5s
 
   # ============================================================================
+  # Grafana Loki Log Aggregation & Storage Service (Phase 4)
+  # ============================================================================
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: sentinelops-loki
+    restart: unless-stopped
+    command:
+      - "-config.file=/etc/loki/loki-config.yml"
+    ports:
+      - "127.0.0.1:3100:3100"
+    volumes:
+      - ./infrastructure/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+    networks:
+      - sentinelops_net
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--tries=1", "--spider", "http://localhost:3100/ready"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # ============================================================================
   # SentinelOps FastAPI Core Backend Service
   # ============================================================================
   backend:
@@ -103,6 +126,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-sentinelops_db}
       PROMETHEUS_URL: ${PROMETHEUS_URL:-http://prometheus:9090}
       BLACKBOX_EXPORTER_URL: ${BLACKBOX_EXPORTER_URL:-http://blackbox_exporter:9115}
+      LOKI_URL: ${LOKI_URL:-http://loki:3100}
       BACKEND_CORS_ORIGINS: '["http://localhost:3000","http://localhost:5173","http://127.0.0.1:3000","http://127.0.0.1:5173"]'
     ports:
       - "127.0.0.1:8000:8000"
@@ -146,6 +170,8 @@ volumes:
     name: sentinelops_postgres_data
   prometheus_data:
     name: sentinelops_prometheus_data
+  loki_data:
+    name: sentinelops_loki_data
 
 networks:
   sentinelops_net:

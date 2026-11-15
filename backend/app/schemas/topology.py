@@ -33,3 +33,4 @@ class TopologyResponse(BaseModel):
         default_factory=dict,
         description="Count of nodes by status (e.g. HEALTHY: 6, WARNING: 1)",
     )
+

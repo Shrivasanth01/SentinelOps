@@ -1,0 +1,133 @@
+// ============================================================================
+// SentinelOps — Grafana Alloy Pipeline Configuration
+// Collects Windows Event Logs, Application Log Files, and FastAPI Event Streams
+// ============================================================================
+
+// 1. Loki Write Destination
+loki.write "local_loki" {
+  endpoint {
+    url = "http://127.0.0.1:3100/loki/api/v1/push"
+    batch_wait = "1s"
+    batch_size = "1MiB"
+  }
+}
+
+// 2. Windows Event Log Collector — System Channel
+loki.source.windowsevent "windows_system" {
+  locale_as_events = true
+  event_log_name   = "System"
+  xpath_query      = "*[System[(Level=1 or Level=2 or Level=3 or Level=4)]]"
+  forward_to       = [loki.process.normalize_system.receiver]
+}
+
+loki.process "normalize_system" {
+  forward_to = [loki.write.local_loki.receiver]
+
+  stage.static_labels {
+    values = {
+      job         = "windows-events",
+      service     = "windows-system",
+      channel     = "System",
+      environment = "development",
+    }
+  }
+
+  stage.json {
+    expressions = {
+      event_id = "event_identifier",
+      level    = "level_text",
+      provider = "source_name",
+      computer = "computer_name",
+      message  = "message",
+    }
+  }
+
+  // Label only low-cardinality severity
+  stage.labels {
+    values = {
+      level = "",
+    }
+  }
+}
+
+// 3. Windows Event Log Collector — Application Channel
+loki.source.windowsevent "windows_application" {
+  locale_as_events = true
+  event_log_name   = "Application"
+  xpath_query      = "*[System[(Level=1 or Level=2 or Level=3 or Level=4)]]"
+  forward_to       = [loki.process.normalize_application.receiver]
+}
+
+loki.process "normalize_application" {
+  forward_to = [loki.write.local_loki.receiver]
+
+  stage.static_labels {
+    values = {
+      job         = "windows-events",
+      service     = "windows-application",
+      channel     = "Application",
+      environment = "development",
+    }
+  }
+
+  stage.json {
+    expressions = {
+      event_id = "event_identifier",
+      level    = "level_text",
+      provider = "source_name",
+      computer = "computer_name",
+      message  = "message",
+    }
+  }
+
+  stage.labels {
+    values = {
+      level = "",
+    }
+  }
+}
+
+// 4. FastAPI & Application Log Files Collector
+local.file_match "sentinelops_logs" {
+  path_targets = [
+    {
+      __path__    = "./logs/*.log",
+      job         = "backend-logs",
+      service     = "sentinelops-api",
+      environment = "development",
+    },
+  ]
+}
+
+loki.source.file "app_log_files" {
+  targets    = local.file_match.sentinelops_logs.targets
+  forward_to = [loki.process.parse_app_json.receiver]
+}
+
+loki.process "parse_app_json" {
+  forward_to = [loki.write.local_loki.receiver]
+
+  stage.json {
+    expressions = {
+      timestamp      = "timestamp",
+      level          = "level",
+      service        = "service",
+      logger         = "logger",
+      correlation_id = "correlation_id",
+      message        = "message",
+    }
+  }
+
+  // Ensure low-cardinality indexing only
+  stage.labels {
+    values = {
+      level   = "",
+      service = "",
+    }
+  }
+
+  stage.timestamp {
+    source = "timestamp"
+    format = "RFC3339"
+  }
+}

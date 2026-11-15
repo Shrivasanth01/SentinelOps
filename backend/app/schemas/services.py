@@ -159,3 +159,4 @@ class WindowsServicesResponse(BaseModel):
     total_services_monitored: int = 0
     running_count: int = 0
     stopped_count: int = 0
+
