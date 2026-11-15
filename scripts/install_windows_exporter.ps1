@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Installs and configures Windows Exporter for SentinelOps real-time host monitoring.
 .DESCRIPTION

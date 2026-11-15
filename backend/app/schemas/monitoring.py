@@ -137,3 +137,4 @@ class HistoryMetricsResponse(BaseModel):
     start: float = Field(..., description="Range start unix epoch seconds")
     end: float = Field(..., description="Range end unix epoch seconds")
     step: str = Field(..., description="Step interval string (e.g. 15s, 60s)")
+

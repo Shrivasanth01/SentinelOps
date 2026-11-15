@@ -58,3 +58,4 @@ Remove-Item -Path $ExtractTemp -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path $ZipPath -Force -ErrorAction SilentlyContinue
 
 Write-Host "[OK] Prometheus ready at: $ExePath" -ForegroundColor Green
+

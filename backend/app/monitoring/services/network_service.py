@@ -110,3 +110,4 @@ class NetworkMonitoringService:
                 status=HealthState.UNKNOWN,
                 timestamp=now,
             )
+

@@ -35,3 +35,4 @@ scrape_configs:
           instance: "windows-host"
           environment: "local-host"
           collector: "windows_exporter"
+

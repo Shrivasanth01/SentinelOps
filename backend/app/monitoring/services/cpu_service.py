@@ -125,3 +125,4 @@ class CpuMonitoringService:
                 status=HealthState.UNKNOWN,
                 timestamp=now,
             )
+

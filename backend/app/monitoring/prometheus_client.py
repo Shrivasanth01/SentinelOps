@@ -158,3 +158,4 @@ class PrometheusClient:
                 except (ValueError, TypeError):
                     return None
         return None
+

@@ -71,3 +71,4 @@ if ($Foreground) {
         Write-Host "     Access Prometheus UI: http://localhost:$Port" -ForegroundColor Cyan
     }
 }
+

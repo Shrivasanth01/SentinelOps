@@ -51,3 +51,4 @@ export const monitoringService = {
     return request<HistoryMetricsResponse>(`/monitoring/history?${params.toString()}`, {}, 10000);
   },
 };
+

@@ -187,3 +187,4 @@ async def get_history(
     ),
 ) -> HistoryMetricsResponse:
     return await service.get_history(metrics=metrics, duration=duration, step=step)
+

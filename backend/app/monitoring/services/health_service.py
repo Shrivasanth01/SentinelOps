@@ -195,3 +195,4 @@ class HealthMonitoringService:
             prometheus_connected=True,
             last_checked_at=now,
         ), targets
+

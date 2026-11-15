@@ -13,3 +13,4 @@ if ($processes) {
 } else {
     Write-Host "[INFO] No prometheus processes are currently running." -ForegroundColor Cyan
 }
+
