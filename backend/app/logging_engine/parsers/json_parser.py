@@ -80,3 +80,4 @@ def parse_json_log_line(
         metadata=sanitized_metadata,
         raw=cleaned,
     )
+

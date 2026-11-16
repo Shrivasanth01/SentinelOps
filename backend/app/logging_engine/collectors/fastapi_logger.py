@@ -20,32 +20,6 @@ class FastAPILogBuffer:
         self.max_size = max_size
         self._buffer: collections.deque[LogEntry] = collections.deque(maxlen=max_size)
         self._lock = asyncio.Lock()
-        self._seed_initial_logs()
-
-    def _seed_initial_logs(self) -> None:
-        """Seed baseline platform events so live telemetry & search work immediately."""
-        import uuid
-        now = datetime.now(timezone.utc)
-        initial_events = [
-            (LogLevelEnum.INFO, "sentinel-kernel", "SentinelOps kernel daemon v0.2.0 initialized on host node.", "APPLICATION_LOG"),
-            (LogLevelEnum.INFO, "sentinel-db", "PostgreSQL connection pool verified with 10 persistent sockets.", "APPLICATION_LOG"),
-            (LogLevelEnum.INFO, "telemetry-collector", "psutil hardware telemetry collector primed on 5.0s cadence.", "APPLICATION_LOG"),
-            (LogLevelEnum.INFO, "ml-detector", "Isolation Forest anomaly engine loaded; waiting for baseline buffer.", "APPLICATION_LOG"),
-            (LogLevelEnum.WARNING, "network-monitor", "Interface eth0 observed transient packet burst (+14.2 MB/s).", "APPLICATION_LOG"),
-            (LogLevelEnum.INFO, "api-gateway", "FastAPI v1 router active on port 8000. Docs exposed on /api/v1/docs.", "APPLICATION_LOG"),
-        ]
-        for level, service, message, source in initial_events:
-            self._buffer.append(
-                LogEntry(
-                    id=str(uuid.uuid4()),
-                    timestamp=now,
-                    level=level,
-                    service=service,
-                    message=message,
-                    source=source,
-                    metadata={},
-                )
-            )
 
     def append(self, entry: LogEntry) -> None:
         self._buffer.append(entry)
@@ -118,3 +92,4 @@ class LokiForwardingHandler(logging.Handler):
             self.buffer.append(entry)
         except Exception:
             self.handleError(record)
+

@@ -41,3 +41,4 @@ def downgrade() -> None:
     op.drop_index("ix_log_sources_source_type", table_name="log_sources")
     op.drop_index("ix_log_sources_name", table_name="log_sources")
     op.drop_table("log_sources")
+

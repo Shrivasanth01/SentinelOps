@@ -74,3 +74,4 @@ class LogQLBuilder:
         if operation == "count":
             return f"sum by (level) (count_over_time({stream}[{valid_duration}]))"
         return f"sum by (service) (rate({stream}[{valid_duration}]))"
+

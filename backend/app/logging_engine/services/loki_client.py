@@ -218,3 +218,4 @@ class LokiClient:
         # Sort descending by timestamp
         entries.sort(key=lambda x: x.timestamp, reverse=True)
         return entries
+

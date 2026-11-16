@@ -79,3 +79,4 @@ def redact_metadata_dict(data: Dict[str, Any]) -> Dict[str, Any]:
             redacted[key] = value
 
     return redacted
+

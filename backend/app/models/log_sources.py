@@ -43,3 +43,4 @@ class LogSourceRecord(Base):
 
     def __repr__(self) -> str:
         return f"<LogSourceRecord id={self.id} name='{self.name}' type='{self.source_type}' status='{self.collection_status}'>"
+

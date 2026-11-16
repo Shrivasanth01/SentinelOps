@@ -91,3 +91,4 @@ class WindowsEventCollector:
         except Exception as exc:
             logger.warning(f"Failed to collect Windows Events from '{channel}': {exc}")
             return []
+

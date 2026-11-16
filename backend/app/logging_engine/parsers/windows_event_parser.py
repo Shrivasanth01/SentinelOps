@@ -109,3 +109,4 @@ def parse_windows_event_dict(event_dict: Dict[str, Any]) -> LogEntry:
         },
         raw=str(event_dict),
     )
+

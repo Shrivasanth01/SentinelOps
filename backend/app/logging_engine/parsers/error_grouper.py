@@ -16,8 +16,8 @@ NORMALIZATION_RULES = [
     (re.compile(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?::\d+)?\b"), "<IP:PORT>"),
     # Port / thread / process numbers (e.g. PID: 1234, thread 5)
     (re.compile(r"\b(?:PID|Thread|Process|Task|ID|line)\s*[:=]?\s*\d+\b", re.IGNORECASE), "<NUM_REF>"),
-    # Durations / sizes / numbers (e.g. 5000ms, 120s, 500)
-    (re.compile(r"\b\d+(?:\.\d+)?(?:ms|s|m|h|ns|us|b|kb|mb|gb)?\b", re.IGNORECASE), "<NUM>"),
+    # Standalone large integers (> 3 digits)
+    (re.compile(r"\b\d{4,}\b"), "<NUM>"),
     # Excessive whitespace
     (re.compile(r"\s+"), " "),
 ]
@@ -82,3 +82,4 @@ def group_error_logs(logs: List[LogEntry]) -> List[ErrorGroup]:
     result = [ErrorGroup(**val) for val in groups_map.values()]
     result.sort(key=lambda g: g.count, reverse=True)
     return result
+

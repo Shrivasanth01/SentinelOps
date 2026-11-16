@@ -88,3 +88,4 @@ class LogCorrelationService:
 
 
 log_correlation_service = LogCorrelationService()
+

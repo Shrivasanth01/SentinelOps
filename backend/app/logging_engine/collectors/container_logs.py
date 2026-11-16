@@ -103,3 +103,4 @@ class DockerContainerLogCollector:
         except (FileNotFoundError, asyncio.TimeoutError, Exception) as exc:
             logger.debug(f"Docker logs query skipped for {container_name}: {exc}")
             return []
+
