@@ -4,6 +4,7 @@ from app.models.logs import SystemLogRecord
 from app.models.anomalies import AnomalyEventRecord
 from app.models.services import MonitoredServiceRecord
 from app.models.log_sources import LogSourceRecord
+from app.models.ml import MLModelRecord
 
 __all__ = [
     "HealthCheckAuditLog",
@@ -12,4 +13,5 @@ __all__ = [
     "AnomalyEventRecord",
     "MonitoredServiceRecord",
     "LogSourceRecord",
+    "MLModelRecord",
 ]

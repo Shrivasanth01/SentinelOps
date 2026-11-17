@@ -10,6 +10,11 @@ from app.models.logs import SystemLogRecord
 
 @pytest.mark.asyncio
 async def test_get_logs_endpoint(client: AsyncClient):
+    # Ensure at least one log is available
+    await client.post(
+        "/api/v1/logs/ingest",
+        json={"level": "INFO", "service": "system-init", "message": "SentinelOps log engine ready"},
+    )
     response = await client.get("/api/v1/logs?limit=10")
     assert response.status_code == 200
     data = response.json()

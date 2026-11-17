@@ -131,3 +131,4 @@ loki.process "parse_app_json" {
     format = "RFC3339"
   }
 }
+

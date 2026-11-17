@@ -1,4 +1,4 @@
-﻿# ============================================================================
+# ============================================================================
 # SentinelOps — Grafana Loki Windows Installation Script
 # Downloads and extracts Loki Windows 64-bit binary to infrastructure/loki/bin
 # ============================================================================
@@ -43,3 +43,4 @@ if (Test-Path $ExeFile) {
 } else {
     Write-Error "[-] Installation verification failed: loki.exe not found."
 }
+

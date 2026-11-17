@@ -1,15 +1,7 @@
-export type AnomalySeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+export * from './ml';
 
-export interface AnomalyEvent {
-  id: string;
-  timestamp: string;
-  score: number;
-  is_anomaly: boolean;
-  severity: AnomalySeverity;
-  contributing_metrics: string[];
-  description: string;
-  resolved: boolean;
-}
+// Backward compatibility types
+export type AnomalySeverity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
 export interface AnomalyScoreResponse {
   score: number;
@@ -23,14 +15,6 @@ export interface AnomalyScoreResponse {
 }
 
 export interface AnomalyHistoryResponse {
-  anomalies: AnomalyEvent[];
+  anomalies: any[];
   total_count: number;
 }
-
-export interface ModelTrainResponse {
-  success: boolean;
-  sample_count: number;
-  contamination: number;
-  message: string;
-}
-

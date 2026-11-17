@@ -16,8 +16,8 @@ NORMALIZATION_RULES = [
     (re.compile(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?::\d+)?\b"), "<IP:PORT>"),
     # Port / thread / process numbers (e.g. PID: 1234, thread 5)
     (re.compile(r"\b(?:PID|Thread|Process|Task|ID|line)\s*[:=]?\s*\d+\b", re.IGNORECASE), "<NUM_REF>"),
-    # Standalone large integers (> 3 digits)
-    (re.compile(r"\b\d{4,}\b"), "<NUM>"),
+    # Standalone large integers (> 3 digits) or numbers with units (e.g. 5000ms, 1000s)
+    (re.compile(r"\b\d{2,}(?:ms|s|us|ns|min|h|bytes|kb|mb|gb)?\b", re.IGNORECASE), "<NUM>"),
     # Excessive whitespace
     (re.compile(r"\s+"), " "),
 ]

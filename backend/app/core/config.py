@@ -79,6 +79,16 @@ class Settings(BaseSettings):
     SECURITY_EVENTS_AUTHORIZED: bool = False
     LOG_BUFFER_MAX_SIZE: int = 2000
 
+    # Machine Learning Anomaly Detection Engine (Phase 5)
+    ML_CONTAMINATION: float = 0.05
+    ML_N_ESTIMATORS: int = 100
+    ML_RANDOM_STATE: int = 42
+    ML_MIN_TRAINING_SAMPLES: int = 30
+    ML_MODEL_STORAGE_PATH: str = "infrastructure/ml_models"
+    ML_SCORE_ANOMALY_THRESHOLD: float = 0.70
+    ML_SCORE_CRITICAL_THRESHOLD: float = 0.85
+    ML_AUTO_DETECT_CADENCE_SECONDS: int = 15
+
     # Infrastructure Metric Alerting & Status Thresholds
     CPU_WARNING_THRESHOLD: float = 75.0
     CPU_CRITICAL_THRESHOLD: float = 90.0
